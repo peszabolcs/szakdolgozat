@@ -1,0 +1,69 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#26636f', 'primaryTextColor': '#fff', 'primaryBorderColor': '#1a464f', 'lineColor': '#475569', 'secondaryColor': '#f5f7f8', 'tertiaryColor': '#fff'}}}%%
+flowchart TD
+    START(["▶ Alkalmazás megnyitása\n(böngésző / PWA ikon)"])
+
+    S01["S01 — Főoldal\n(PublicHomePage)"]
+    S02["S02 — Bejelentkezés\n(LoginPage)"]
+
+    subgraph ADMIN ["🔒 Admin terület – bejelentkezés szükséges"]
+        direction TB
+        S03["S03 — Vezérlőpult\n(DashboardPage)"]
+        S04["S04 — Bevásárlóközpontok\n(ShoppingCentersPage)"]
+        S05["S05 — Térkép\n(MapPage)"]
+        S06["S06 — Admin Panel\n(AdminPage)"]
+        S07["S07 — Parkolóhelyek\n(ParkingSpacesPage)\n[nincs sidebar-ban]"]
+        S08["S08 — Területek\n(AreasPage)\n[nincs sidebar-ban]"]
+    end
+
+    NOTIF1(["♦ PWA Install Snackbar\n(overlay – bármely oldalon)"])
+    NOTIF2(["♦ Offline Indicator Snackbar\n(overlay – bármely oldalon)"])
+
+    %% Belépési pontok
+    START --> S01
+
+    %% Publikus navigáció
+    S01 -->|"'Bejelentkezés' gomb"| S02
+    S02 -->|"Sikeres bejelentkezés\n→ /admin/dashboard"| S03
+
+    %% Sidebar navigáció (kétirányú)
+    S03 <-->|"Sidebar: 'Shopping Centers'"| S04
+    S03 <-->|"Sidebar: 'Map'"| S05
+    S03 <-->|"Sidebar: 'Admin Panel'"| S06
+    S04 <-->|"Sidebar"| S05
+    S04 <-->|"Sidebar"| S06
+    S05 <-->|"Sidebar"| S06
+
+    %% Képernyők közötti direkt navigáció
+    S04 -->|"'View on Map' ikon gomb\n(soronként)"| S05
+    S05 -->|"'Navigate' gomb\n→ Google Maps (új tab)"| EXT_MAPS[/"🌐 Google Maps\n(külső)"/]
+
+    %% Nem-routolt képernyők
+    S03 -.->|"közvetlen URL\n/admin/... (jövőbeli)"| S07
+    S03 -.->|"közvetlen URL\n/admin/... (jövőbeli)"| S08
+
+    %% Logout
+    S03 -->|"Logout (AppBar menü)"| S01
+    S04 -->|"Logout (AppBar menü)"| S01
+    S05 -->|"Logout (AppBar menü)"| S01
+    S06 -->|"Logout (AppBar menü)"| S01
+
+    %% Védett route redirect
+    S02 -.->|"Sikertelen auth\n→ visszamarad"| S02
+
+    %% Overlays
+    NOTIF1 -. "PWA install ajánlat\n(böngésző támogatja)" .-> S01
+    NOTIF2 -. "Offline/online jelzés" .-> S03
+
+    %% Stílusok
+    style START fill:#26636f,color:#fff,stroke:#1a464f
+    style S01 fill:#e0f2f1,stroke:#26636f,color:#0f172a
+    style S02 fill:#e0f2f1,stroke:#26636f,color:#0f172a
+    style S03 fill:#26636f,color:#fff,stroke:#1a464f
+    style S04 fill:#26636f,color:#fff,stroke:#1a464f
+    style S05 fill:#26636f,color:#fff,stroke:#1a464f
+    style S06 fill:#26636f,color:#fff,stroke:#1a464f
+    style S07 fill:#b2dfdb,stroke:#26636f,color:#0f172a,stroke-dasharray: 5 5
+    style S08 fill:#b2dfdb,stroke:#26636f,color:#0f172a,stroke-dasharray: 5 5
+    style NOTIF1 fill:#fff9c4,stroke:#f9a825,color:#0f172a
+    style NOTIF2 fill:#fff9c4,stroke:#f9a825,color:#0f172a
+    style EXT_MAPS fill:#fce4ec,stroke:#ef4444,color:#0f172a

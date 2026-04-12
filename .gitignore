@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+dist-ssr/
+dev-dist/
+build/
+
+# Test & coverage
+coverage/
+sprints/02/reports/coverage/
+playwright-report/
+test-results/
+
+# Vite
+*.local
+vite.config.ts.timestamp-*
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Editor & IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Terraform
+sprints/02/infra/terraform/.terraform/
+sprints/02/infra/terraform/.terraform.lock.hcl
+sprints/02/infra/terraform/*.tfplan
+sprints/02/infra/terraform/plan.out
+sprints/02/infra/terraform/*.tfstate
+sprints/02/infra/terraform/*.tfstate.backup
+sprints/02/infra/terraform/terraform.tfvars
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# PWA
+public/sw.js
+public/workbox-*.js
+public/sw.js.map
+public/workbox-*.js.map

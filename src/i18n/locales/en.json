@@ -1,0 +1,185 @@
+{
+  "app": {
+    "title": "ParkVision",
+    "subtitle": "Smart Parking System"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "shoppingCenters": "Shopping Centers",
+    "admin": "Admin",
+    "map": "Map"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalCenters": "Shopping Centers",
+    "totalCapacity": "Total Capacity",
+    "occupied": "Occupied",
+    "available": "Available",
+    "averageOccupancy": "Average Occupancy",
+    "noCentersYet": "No shopping centers in the system yet.",
+    "noCentersTitle": "No shopping centers yet",
+    "noCentersMessage": "There are no shopping centers in the system yet.",
+    "statistics": "Statistics"
+  },
+  "shoppingCenters": {
+    "title": "Shopping Centers",
+    "filter": "Filter by Occupancy",
+    "filterAll": "All",
+    "filterLow": "Low (<50%)",
+    "filterMedium": "Medium (50-80%)",
+    "filterHigh": "High (>80%)",
+    "results": "results",
+    "tableHeaders": {
+      "name": "Name",
+      "address": "Address",
+      "capacity": "Capacity",
+      "occupied": "Occupied",
+      "available": "Available",
+      "occupancy": "Occupancy",
+      "actions": "Actions"
+    },
+    "noCentersTitle": "No shopping centers in the system yet",
+    "noCentersMessage": "There are no shopping centers in the system.",
+    "viewOnMap": "View on Map"
+  },
+  "areas": {
+    "title": "Parking Areas",
+    "capacity": "Capacity",
+    "occupied": "Occupied",
+    "available": "Available",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "totalAreas": "areas total",
+    "capacityLabel": "Capacity: {{count}} spaces",
+    "occupancyLabel": "Occupancy: {{occupied}} / {{capacity}} ({{rate}}%)",
+    "noAreasTitle": "No parking area defined yet",
+    "noAreasMessage": "Create the first area to get started!",
+    "createArea": "Create Area"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Real-time analytics and system overview",
+    "overview": "Overview",
+    "statistics": "Statistics",
+    "manageSpaces": "Manage Spaces",
+    "feedback": "Feedback",
+    "addSpace": "Add New Space",
+    "editSpace": "Edit Space",
+    "deleteSpace": "Delete Space",
+    "confirmDelete": "Are you sure you want to delete this space?",
+    "tabs": {
+      "occupancyTrends": "Occupancy Trends",
+      "capacityAnalysis": "Capacity Analysis",
+      "distribution": "Distribution"
+    },
+    "charts": {
+      "occupancyTrend": "24-Hour Occupancy Trend",
+      "capacityVsOccupancy": "Capacity vs Occupancy by Area",
+      "occupancyDistribution": "Occupancy Distribution",
+      "occupancyRateLabel": "Occupancy Rate (%)",
+      "totalCapacity": "Total Capacity",
+      "occupied": "Occupied"
+    },
+    "table": {
+      "title": "Parking Areas Overview",
+      "areaName": "Area Name",
+      "capacity": "Capacity",
+      "occupied": "Occupied",
+      "available": "Available",
+      "occupancyRate": "Occupancy Rate",
+      "status": "Status"
+    }
+  },
+  "map": {
+    "title": "Map",
+    "showRoute": "Show Route",
+    "currentLocation": "Current Location",
+    "parkingLocation": "Parking Location",
+    "distanceAway": "{{distance}} km away",
+    "searchPlaceholder": "Search parking locations...",
+    "myLocation": "My Location",
+    "yourLocation": "Your Location",
+    "centerMap": "Center Map",
+    "freeSpaces": "{{count}} free",
+    "occupancyPercent": "{{percent}}% full",
+    "navigate": "Navigate",
+    "spacesAvailable": "{{count}} spaces available",
+    "go": "Go"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "noData": "No data",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "auto": "Auto",
+    "errorOccurred": "An error occurred while fetching data: {{message}}",
+    "unknownError": "Unknown error"
+  },
+  "empty": {
+    "noSpaces": "No parking spaces",
+    "noAreas": "No parking areas",
+    "noData": "No data available",
+    "tryAgain": "Try again later"
+  },
+  "error": {
+    "loadingFailed": "Failed to load data",
+    "networkError": "Network error",
+    "serverError": "Server error",
+    "tryAgain": "Try again"
+  },
+  "pwa": {
+    "installPrompt": "Install the app for faster access",
+    "install": "Install",
+    "later": "Later",
+    "offline": "You are working offline",
+    "online": "Online"
+  },
+  "auth": {
+    "adminLogin": "Admin Login",
+    "loginPrompt": "Sign in to access the admin panel",
+    "email": "Email address",
+    "password": "Password",
+    "login": "Login",
+    "logout": "Logout",
+    "loggingIn": "Logging in...",
+    "invalidCredentials": "Invalid email or password",
+    "loginError": "Login error occurred",
+    "demoCredentials": "Demo credentials",
+    "welcome": "Welcome"
+  },
+  "public": {
+    "findParking": "Find Parking",
+    "availableSpaces": "Available Spaces",
+    "occupied": "occupied",
+    "viewMap": "View Map",
+    "shoppingCenters": {
+      "title": "Shopping Centers"
+    },
+    "hero": {
+      "title": "Find Your Perfect Parking Spot",
+      "subtitle": "Real-time parking availability in Budapest shopping centers"
+    },
+    "map": {
+      "placeholder": "Interactive Map Coming Soon",
+      "description": "View all shopping centers on an interactive map"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "noDataAvailable": "No data available",
+    "loading": "Loading..."
+  }
+}

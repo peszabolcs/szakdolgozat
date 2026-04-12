@@ -1,0 +1,185 @@
+{
+  "app": {
+    "title": "ParkVision",
+    "subtitle": "Okos parkolási rendszer"
+  },
+  "nav": {
+    "dashboard": "Vezérlőpult",
+    "shoppingCenters": "Bevásárlóközpontok",
+    "admin": "Admin",
+    "map": "Térkép"
+  },
+  "dashboard": {
+    "title": "Vezérlőpult",
+    "totalCenters": "Bevásárlóközpontok",
+    "totalCapacity": "Összes kapacitás",
+    "occupied": "Foglalt",
+    "available": "Szabad",
+    "averageOccupancy": "Átlagos kihasználtság",
+    "noCentersYet": "Még nincs bevásárlóközpont a rendszerben.",
+    "noCentersTitle": "Nincs még bevásárlóközpont",
+    "noCentersMessage": "A rendszerben még nincsenek bevásárlóközpontok.",
+    "statistics": "Statisztikák"
+  },
+  "shoppingCenters": {
+    "title": "Bevásárlóközpontok",
+    "filter": "Szűrés kihasználtság szerint",
+    "filterAll": "Összes",
+    "filterLow": "Alacsony (<50%)",
+    "filterMedium": "Közepes (50-80%)",
+    "filterHigh": "Magas (>80%)",
+    "results": "találat",
+    "tableHeaders": {
+      "name": "Név",
+      "address": "Cím",
+      "capacity": "Kapacitás",
+      "occupied": "Foglalt",
+      "available": "Szabad",
+      "occupancy": "Kihasználtság",
+      "actions": "Műveletek"
+    },
+    "noCentersTitle": "Nincs még bevásárlóközpont a rendszerben",
+    "noCentersMessage": "A rendszerben még nincsenek bevásárlóközpontok.",
+    "viewOnMap": "Megtekintés térképen"
+  },
+  "areas": {
+    "title": "Parkolási területek",
+    "capacity": "Kapacitás",
+    "occupied": "Foglalt",
+    "available": "Szabad",
+    "status": "Státusz",
+    "active": "Aktív",
+    "inactive": "Inaktív",
+    "totalAreas": "terület összesen",
+    "capacityLabel": "Kapacitás: {{count}} hely",
+    "occupancyLabel": "Foglaltság: {{occupied}} / {{capacity}} ({{rate}}%)",
+    "noAreasTitle": "Még nincs parkolási terület definiálva",
+    "noAreasMessage": "Hozd létre az első területet a kezdéshez!",
+    "createArea": "Terület létrehozása"
+  },
+  "admin": {
+    "title": "Admin vezérlőpult",
+    "subtitle": "Valós idejű analitika és rendszeráttekintés",
+    "overview": "Áttekintés",
+    "statistics": "Statisztikák",
+    "manageSpaces": "Helyek kezelése",
+    "feedback": "Visszajelzések",
+    "addSpace": "Új hely hozzáadása",
+    "editSpace": "Hely szerkesztése",
+    "deleteSpace": "Hely törlése",
+    "confirmDelete": "Biztosan törölni szeretnéd ezt a helyet?",
+    "tabs": {
+      "occupancyTrends": "Foglaltsági trendek",
+      "capacityAnalysis": "Kapacitás elemzés",
+      "distribution": "Eloszlás"
+    },
+    "charts": {
+      "occupancyTrend": "24 órás foglaltsági trend",
+      "capacityVsOccupancy": "Kapacitás vs Foglaltság területenként",
+      "occupancyDistribution": "Foglaltsági eloszlás",
+      "occupancyRateLabel": "Foglaltsági arány (%)",
+      "totalCapacity": "Teljes kapacitás",
+      "occupied": "Foglalt"
+    },
+    "table": {
+      "title": "Parkolási területek áttekintése",
+      "areaName": "Terület neve",
+      "capacity": "Kapacitás",
+      "occupied": "Foglalt",
+      "available": "Szabad",
+      "occupancyRate": "Foglaltsági arány",
+      "status": "Státusz"
+    }
+  },
+  "map": {
+    "title": "Térkép",
+    "showRoute": "Útvonal mutatása",
+    "currentLocation": "Jelenlegi helyzet",
+    "parkingLocation": "Parkoló helye",
+    "distanceAway": "{{distance}} km távolságra",
+    "searchPlaceholder": "Parkolóhelyek keresése...",
+    "myLocation": "Saját helyzetem",
+    "yourLocation": "Az Ön helyzete",
+    "centerMap": "Térkép középre",
+    "freeSpaces": "{{count}} szabad",
+    "occupancyPercent": "{{percent}}% tele",
+    "navigate": "Navigálás",
+    "spacesAvailable": "{{count}} hely elérhető",
+    "go": "Indulás"
+  },
+  "common": {
+    "loading": "Betöltés...",
+    "error": "Hiba történt",
+    "retry": "Újra",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "add": "Hozzáadás",
+    "search": "Keresés",
+    "filter": "Szűrés",
+    "noData": "Nincs adat",
+    "settings": "Beállítások",
+    "language": "Nyelv",
+    "theme": "Téma",
+    "dark": "Sötét",
+    "light": "Világos",
+    "auto": "Automatikus",
+    "errorOccurred": "Hiba történt az adatok lekérésekor: {{message}}",
+    "unknownError": "Ismeretlen hiba"
+  },
+  "empty": {
+    "noSpaces": "Nincsenek parkolóhelyek",
+    "noAreas": "Nincsenek parkolási területek",
+    "noData": "Nincsenek adatok",
+    "tryAgain": "Próbáld újra később"
+  },
+  "error": {
+    "loadingFailed": "Nem sikerült betölteni az adatokat",
+    "networkError": "Hálózati hiba",
+    "serverError": "Szerver hiba",
+    "tryAgain": "Próbáld újra"
+  },
+  "pwa": {
+    "installPrompt": "Telepítsd az alkalmazást a gyorsabb hozzáféréshez",
+    "install": "Telepítés",
+    "later": "Később",
+    "offline": "Offline módban dolgozol",
+    "online": "Online"
+  },
+  "auth": {
+    "adminLogin": "Admin bejelentkezés",
+    "loginPrompt": "Jelentkezz be az admin felület eléréséhez",
+    "email": "Email cím",
+    "password": "Jelszó",
+    "login": "Bejelentkezés",
+    "logout": "Kijelentkezés",
+    "loggingIn": "Bejelentkezés...",
+    "invalidCredentials": "Hibás email cím vagy jelszó",
+    "loginError": "Bejelentkezési hiba történt",
+    "demoCredentials": "Demo hozzáférés",
+    "welcome": "Üdvözöljük"
+  },
+  "public": {
+    "findParking": "Parkolóhely keresése",
+    "availableSpaces": "Szabad helyek",
+    "occupied": "foglalt",
+    "viewMap": "Térkép megtekintése",
+    "shoppingCenters": {
+      "title": "Bevásárlóközpontok"
+    },
+    "hero": {
+      "title": "Találd meg a tökéletes parkolóhelyet",
+      "subtitle": "Valós idejű parkolóhely információk budapesti bevásárlóközpontokban"
+    },
+    "map": {
+      "placeholder": "Interaktív térkép hamarosan",
+      "description": "Nézd meg az összes bevásárlóközpontot egy interaktív térképen"
+    },
+    "footer": {
+      "rights": "Minden jog fenntartva."
+    },
+    "noDataAvailable": "Nincs elérhető adat",
+    "loading": "Betöltés..."
+  }
+}
