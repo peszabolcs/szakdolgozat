@@ -6,8 +6,11 @@
   "nav": {
     "dashboard": "Vezérlőpult",
     "shoppingCenters": "Bevásárlóközpontok",
+    "parkingSpaces": "Parkolóhelyek",
     "admin": "Admin",
-    "map": "Térkép"
+    "map": "Térkép",
+    "reservations": "Foglalások",
+    "settings": "Beállítások"
   },
   "dashboard": {
     "title": "Vezérlőpult",
@@ -158,7 +161,17 @@
     "invalidCredentials": "Hibás email cím vagy jelszó",
     "loginError": "Bejelentkezési hiba történt",
     "demoCredentials": "Demo hozzáférés",
-    "welcome": "Üdvözöljük"
+    "welcome": "Üdvözöljük",
+    "backToHome": "Vissza a főoldalra",
+    "errors": {
+      "emailRequired": "Az email cím megadása kötelező.",
+      "emailInvalid": "Érvénytelen email cím formátum.",
+      "passwordRequired": "A jelszó megadása kötelező.",
+      "passwordShort": "A jelszó legalább 6 karakter hosszú legyen.",
+      "titleInvalid": "Hibás bejelentkezési adatok",
+      "titleNetwork": "Nem érhető el a szerver",
+      "titleUnknown": "Bejelentkezési hiba"
+    }
   },
   "public": {
     "findParking": "Parkolóhely keresése",
@@ -166,11 +179,15 @@
     "occupied": "foglalt",
     "viewMap": "Térkép megtekintése",
     "shoppingCenters": {
-      "title": "Bevásárlóközpontok"
+      "title": "Bevásárlóközpontok",
+      "eyebrow": "Budapest",
+      "subtitle": "Élő parkolóhely-kihasználtság, egyetlen kattintással foglalható."
     },
     "hero": {
       "title": "Találd meg a tökéletes parkolóhelyet",
-      "subtitle": "Valós idejű parkolóhely információk budapesti bevásárlóközpontokban"
+      "subtitle": "Valós idejű parkolóhely információk budapesti bevásárlóközpontokban",
+      "reserveCta": "Foglalás indítása",
+      "exploreCta": "Központok böngészése"
     },
     "map": {
       "placeholder": "Interaktív térkép hamarosan",
@@ -181,5 +198,114 @@
     },
     "noDataAvailable": "Nincs elérhető adat",
     "loading": "Betöltés..."
+  },
+  "parkingSpaces": {
+    "title": "Parkolóhelyek",
+    "subtitle": "Egyedi parkolóhelyek élő státusza zónánként.",
+    "filter": "Szűrés státusz szerint",
+    "filterStatus": "Szűrés státusz szerint",
+    "allSpaces": "Összes",
+    "onlyOccupied": "Csak foglalt",
+    "onlyFree": "Csak szabad",
+    "totalSpaces": "Összes hely",
+    "occupied": "Foglalt",
+    "free": "Szabad",
+    "results": "találat",
+    "searchPlaceholder": "Keresés azonosító vagy zóna szerint...",
+    "tableHeaders": {
+      "id": "Azonosító",
+      "status": "Státusz",
+      "area": "Zóna",
+      "updated": "Frissítve"
+    },
+    "noSpacesTitle": "Nincs még parkolóhely a rendszerben",
+    "noSpacesMessage": "Az IoT szenzorok adatai itt fognak megjelenni.",
+    "noResultsTitle": "Nincs találat",
+    "noResultsMessage": "Próbálj más szűrőt vagy keresési kifejezést.",
+    "addParkingSpace": "Új parkolóhely hozzáadása"
+  },
+  "settings": {
+    "title": "Beállítások",
+    "subtitle": "Profil, értesítések és fizetési mód beállítása.",
+    "save": "Mentés",
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Alapadatok és kapcsolat",
+      "name": "Név",
+      "email": "Email cím",
+      "emailLocked": "Az email cím nem módosítható.",
+      "phone": "Telefonszám",
+      "role": "Szerepkör"
+    },
+    "notifications": {
+      "title": "Értesítések",
+      "subtitle": "Mikor kérsz emailt vagy push üzenetet",
+      "email": "Email értesítések foglalásokról",
+      "push": "Push értesítések (mobil)",
+      "occupancyAlert": "Riasztás 90%+ telítettségnél"
+    },
+    "payment": {
+      "title": "Fizetési mód",
+      "subtitle": "Alapértelmezett fizetés foglalásokhoz",
+      "methods": {
+        "card": "Bankkártya",
+        "paypal": "PayPal",
+        "invoice": "Számla"
+      },
+      "cardInfo": "Tárolt kártya: **** **** **** {{last4}} (titkosított)"
+    },
+    "toast": {
+      "saved": "Beállítások elmentve."
+    }
+  },
+  "parkingDetail": {
+    "eyebrow": "Bevásárlóközpont",
+    "kpiOccupancy": "Aktuális foglaltság",
+    "kpiFree": "Szabad helyek",
+    "kpiStatus": "Státusz",
+    "totalCapacity": "összes hely",
+    "todayTrend": "Mai foglaltsági trend",
+    "weeklyHeatmap": "Heti foglaltsági heatmap",
+    "heatmapHint": "Az utolsó 7 nap óránkénti átlagos foglaltsága. Sötétebb = magasabb foglaltság.",
+    "noTrendData": "Nincs még elég historikus adat.",
+    "statusLabel": {
+      "success": "Optimális",
+      "warning": "Magas terhelés",
+      "error": "Telített"
+    }
+  },
+  "reservation": {
+    "title": "Parkolóhely foglalása",
+    "pageTitle": "Foglalásaim",
+    "pageSubtitle": "Ide gyűjtjük az aktív és múltbeli foglalásaidat.",
+    "cta": "Foglalás",
+    "center": "Bevásárlóközpont",
+    "currentOccupancy": "Aktuális foglaltság",
+    "date": "Dátum",
+    "timeSlot": "Időslot (1 óra)",
+    "confirm": "Foglalás megerősítése",
+    "cancel": "Lemondás",
+    "tabs": {
+      "upcoming": "Közelgő",
+      "past": "Múlt"
+    },
+    "errors": {
+      "pastSlot": "A választott időslot a múltban van.",
+      "fullCenter": "Ez a központ jelenleg telített, nem fogadhat új foglalást."
+    },
+    "toast": {
+      "success": "Sikeres foglalás {{time}}-ra a(z) {{center}}-be.",
+      "error": "Foglalás sikertelen. Kérlek, próbáld újra.",
+      "duplicate": "Erre az időslotra már van foglalásod ebben a központban.",
+      "fullCenter": "Ez a központ jelenleg telített.",
+      "cancelled": "A foglalást lemondtad."
+    },
+    "empty": {
+      "upcomingTitle": "Még nem foglaltál parkolót",
+      "upcomingMessage": "Indítsd el az első foglalásodat, és térj vissza ide bármikor — itt látod majd az aktív foglalásaidat.",
+      "cta": "Foglalj most",
+      "pastTitle": "Nincs még múltbeli foglalásod",
+      "pastMessage": "Itt jelenik meg minden lemondott vagy lezárt foglalás."
+    }
   }
 }

@@ -40,10 +40,23 @@ export interface ShoppingCenter {
   openingHours: string;
   imageUrl?: string;
   description: string;
+  updatedAt?: string;
 }
 
 export interface ApiError {
   message: string;
   code?: string;
   details?: unknown;
+}
+
+export type ReservationStatus = 'active' | 'cancelled';
+
+export interface Reservation {
+  id: string;
+  centerId: string;
+  centerName: string;
+  slotStart: string;
+  slotEnd: string;
+  createdAt: string;
+  status: ReservationStatus;
 }

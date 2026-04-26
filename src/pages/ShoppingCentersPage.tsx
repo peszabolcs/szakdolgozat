@@ -22,6 +22,7 @@ import { useState, useMemo } from 'react';
 import { useShoppingCenters } from '../hooks/useShoppingCenters';
 import EmptyState from '../components/EmptyState';
 import ErrorBanner from '../components/ErrorBanner';
+import { TableSkeleton } from '../components/skeletons';
 import { useTranslation } from 'react-i18next';
 import { PageTransition } from '../components/PageTransition';
 import MapIcon from '@mui/icons-material/Map';
@@ -58,12 +59,20 @@ export default function ShoppingCentersPage() {
   };
 
   if (isLoading) {
-    return <Typography>{t('common.loading')}</Typography>;
+    return (
+      <Box>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
+          {t('shoppingCenters.title')}
+        </Typography>
+        <TableSkeleton rows={6} columns={6} />
+      </Box>
+    );
   }
 
   if (isError) {
     return (
       <ErrorBanner
+        title={t('error.loadingFailed')}
         message={t('common.errorOccurred', {
           message: error instanceof Error ? error.message : t('common.unknownError')
         })}

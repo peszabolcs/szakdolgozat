@@ -6,8 +6,11 @@
   "nav": {
     "dashboard": "Dashboard",
     "shoppingCenters": "Shopping Centers",
+    "parkingSpaces": "Parking Spaces",
     "admin": "Admin",
-    "map": "Map"
+    "map": "Map",
+    "reservations": "Reservations",
+    "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -158,7 +161,17 @@
     "invalidCredentials": "Invalid email or password",
     "loginError": "Login error occurred",
     "demoCredentials": "Demo credentials",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "backToHome": "Back to home",
+    "errors": {
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid email format.",
+      "passwordRequired": "Password is required.",
+      "passwordShort": "Password must be at least 6 characters.",
+      "titleInvalid": "Invalid credentials",
+      "titleNetwork": "Server unreachable",
+      "titleUnknown": "Login error"
+    }
   },
   "public": {
     "findParking": "Find Parking",
@@ -166,11 +179,15 @@
     "occupied": "occupied",
     "viewMap": "View Map",
     "shoppingCenters": {
-      "title": "Shopping Centers"
+      "title": "Shopping Centers",
+      "eyebrow": "Budapest",
+      "subtitle": "Live parking availability, one click to reserve."
     },
     "hero": {
       "title": "Find Your Perfect Parking Spot",
-      "subtitle": "Real-time parking availability in Budapest shopping centers"
+      "subtitle": "Real-time parking availability in Budapest shopping centers",
+      "reserveCta": "Start a reservation",
+      "exploreCta": "Browse centers"
     },
     "map": {
       "placeholder": "Interactive Map Coming Soon",
@@ -181,5 +198,114 @@
     },
     "noDataAvailable": "No data available",
     "loading": "Loading..."
+  },
+  "parkingSpaces": {
+    "title": "Parking Spaces",
+    "subtitle": "Live status of individual parking spots, by zone.",
+    "filter": "Filter by status",
+    "filterStatus": "Filter by status",
+    "allSpaces": "All",
+    "onlyOccupied": "Occupied only",
+    "onlyFree": "Free only",
+    "totalSpaces": "Total spaces",
+    "occupied": "Occupied",
+    "free": "Free",
+    "results": "results",
+    "searchPlaceholder": "Search by ID or zone...",
+    "tableHeaders": {
+      "id": "ID",
+      "status": "Status",
+      "area": "Zone",
+      "updated": "Updated"
+    },
+    "noSpacesTitle": "No parking spaces yet",
+    "noSpacesMessage": "Sensor data will appear here.",
+    "noResultsTitle": "No matches",
+    "noResultsMessage": "Try a different filter or search term.",
+    "addParkingSpace": "Add parking space"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Profile, notifications, and payment.",
+    "save": "Save",
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Basic info and contact",
+      "name": "Name",
+      "email": "Email address",
+      "emailLocked": "Email address cannot be changed.",
+      "phone": "Phone",
+      "role": "Role"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "When you want emails or push messages",
+      "email": "Email notifications for reservations",
+      "push": "Push notifications (mobile)",
+      "occupancyAlert": "Alert at 90%+ occupancy"
+    },
+    "payment": {
+      "title": "Payment method",
+      "subtitle": "Default payment for reservations",
+      "methods": {
+        "card": "Credit card",
+        "paypal": "PayPal",
+        "invoice": "Invoice"
+      },
+      "cardInfo": "Stored card: **** **** **** {{last4}} (encrypted)"
+    },
+    "toast": {
+      "saved": "Settings saved."
+    }
+  },
+  "parkingDetail": {
+    "eyebrow": "Shopping center",
+    "kpiOccupancy": "Current occupancy",
+    "kpiFree": "Available spaces",
+    "kpiStatus": "Status",
+    "totalCapacity": "total",
+    "todayTrend": "Today's occupancy trend",
+    "weeklyHeatmap": "Weekly occupancy heatmap",
+    "heatmapHint": "Hourly average occupancy over the past 7 days. Darker = higher occupancy.",
+    "noTrendData": "Not enough historical data yet.",
+    "statusLabel": {
+      "success": "Optimal",
+      "warning": "High load",
+      "error": "Full"
+    }
+  },
+  "reservation": {
+    "title": "Reserve a parking spot",
+    "pageTitle": "My reservations",
+    "pageSubtitle": "Your active and past reservations are listed here.",
+    "cta": "Reserve",
+    "center": "Shopping center",
+    "currentOccupancy": "Current occupancy",
+    "date": "Date",
+    "timeSlot": "Time slot (1 hour)",
+    "confirm": "Confirm reservation",
+    "cancel": "Cancel",
+    "tabs": {
+      "upcoming": "Upcoming",
+      "past": "Past"
+    },
+    "errors": {
+      "pastSlot": "The selected time slot is in the past.",
+      "fullCenter": "This center is currently full and cannot accept new reservations."
+    },
+    "toast": {
+      "success": "Reservation confirmed for {{time}} at {{center}}.",
+      "error": "Reservation failed. Please try again.",
+      "duplicate": "You already have a reservation for this slot at this center.",
+      "fullCenter": "This center is currently full.",
+      "cancelled": "Reservation cancelled."
+    },
+    "empty": {
+      "upcomingTitle": "You have no reservations yet",
+      "upcomingMessage": "Make your first reservation and come back here anytime — your active bookings will appear here.",
+      "cta": "Reserve now",
+      "pastTitle": "No past reservations yet",
+      "pastMessage": "Cancelled and completed reservations will appear here."
+    }
   }
 }

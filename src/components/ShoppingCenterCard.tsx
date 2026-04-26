@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Card,
+  CardActions,
   CardContent,
   CardMedia,
   Typography,
   Box,
   Stack,
   Chip,
+  Button,
   LinearProgress,
   Skeleton,
 } from '@mui/material';
@@ -15,6 +17,7 @@ import {
   LocationOn,
   Schedule,
   LocalParking,
+  EventAvailable,
 } from '@mui/icons-material';
 import { ShoppingCenter } from '../types';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +25,10 @@ import { useTranslation } from 'react-i18next';
 interface ShoppingCenterCardProps {
   center: ShoppingCenter;
   onClick?: () => void;
+  onReserve?: (center: ShoppingCenter) => void;
 }
 
-export const ShoppingCenterCard = ({ center, onClick }: ShoppingCenterCardProps) => {
+export const ShoppingCenterCard = ({ center, onClick, onReserve }: ShoppingCenterCardProps) => {
   const { t } = useTranslation();
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
@@ -157,6 +161,22 @@ export const ShoppingCenterCard = ({ center, onClick }: ShoppingCenterCardProps)
           </Box>
         </Stack>
       </CardContent>
+      {onReserve && (
+        <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            startIcon={<EventAvailable />}
+            disabled={occupancyRate >= 100}
+            onClick={(e) => {
+              e.stopPropagation();
+              onReserve(center);
+            }}
+          >
+            {t('reservation.cta')}
+          </Button>
+        </CardActions>
+      )}
     </Card>
     </motion.div>
   );

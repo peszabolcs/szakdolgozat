@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
+const USE_MSW = import.meta.env.DEV && import.meta.env.VITE_USE_MSW === 'true';
+
 async function enableMocking() {
-  if (import.meta.env.DEV) {
+  if (USE_MSW) {
     const { worker } = await import('./mocks/browser');
     return worker.start({
       onUnhandledRequest: 'bypass',
