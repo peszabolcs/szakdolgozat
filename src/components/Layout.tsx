@@ -21,6 +21,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import MapIcon from '@mui/icons-material/Map';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -52,6 +53,7 @@ export default function Layout() {
       icon: <StorefrontIcon />,
     },
     { path: '/admin/map', label: t('nav.map'), icon: <MapIcon /> },
+    { path: '/admin/reservations', label: t('nav.reservations'), icon: <EventAvailableIcon /> },
     { path: '/admin/admin-panel', label: t('nav.admin'), icon: <AdminPanelSettingsIcon /> },
   ];
 
@@ -199,20 +201,57 @@ export default function Layout() {
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
-          <List role="navigation" aria-label="Main navigation">
-            {menuItems.map((item) => (
-              <ListItem key={item.path} disablePadding>
-                <ListItemButton
-                  selected={location.pathname === item.path}
-                  onClick={() => navigate(item.path)}
-                  aria-label={`Navigate to ${item.label}`}
-                  aria-current={location.pathname === item.path ? 'page' : undefined}
-                >
-                  <ListItemIcon aria-hidden="true">{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+          <List role="navigation" aria-label="Main navigation" sx={{ px: 1, pt: 1 }}>
+            {menuItems.map((item) => {
+              const active = location.pathname === item.path;
+              return (
+                <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemButton
+                    selected={active}
+                    onClick={() => navigate(item.path)}
+                    aria-label={`Navigate to ${item.label}`}
+                    aria-current={active ? 'page' : undefined}
+                    sx={{
+                      borderRadius: 2,
+                      position: 'relative',
+                      transition: 'all 0.2s ease',
+                      '&.Mui-selected': {
+                        bgcolor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(61, 132, 146, 0.16)'
+                            : 'rgba(38, 99, 111, 0.10)',
+                        color: 'primary.main',
+                        '& .MuiListItemIcon-root': { color: 'primary.main' },
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          left: -8,
+                          top: 8,
+                          bottom: 8,
+                          width: 4,
+                          borderRadius: 2,
+                          bgcolor: 'primary.main',
+                        },
+                      },
+                      '&:hover': {
+                        bgcolor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(61, 132, 146, 0.10)'
+                            : 'rgba(38, 99, 111, 0.06)',
+                      },
+                    }}
+                  >
+                    <ListItemIcon aria-hidden="true" sx={{ minWidth: 40 }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{ fontWeight: active ? 700 : 500 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
       </Drawer>

@@ -15,8 +15,10 @@ describe('EmptyState', () => {
     expect(screen.getByText('Nincsenek parkolóhelyek')).toBeInTheDocument();
   });
 
-  it('renders action button when provided', () => {
+  it('renders action button when provided and triggers callback', async () => {
     const onAction = vi.fn();
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
     render(
       <EmptyState
         title="Nincs adat"
@@ -28,7 +30,9 @@ describe('EmptyState', () => {
 
     const button = screen.getByRole('button', { name: /hozzáadás/i });
     expect(button).toBeInTheDocument();
-    expect(button).toBeDisabled();
+    expect(button).toBeEnabled();
+    await user.click(button);
+    expect(onAction).toHaveBeenCalledTimes(1);
   });
 
   it('does not render button when action is not provided', () => {
