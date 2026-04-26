@@ -68,7 +68,11 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true,
+        // PWA service worker disabled in dev to avoid conflict with MSW worker.
+        // Both register service workers; the PWA SW can intercept API calls
+        // before MSW reaches them, leading to AxiosErrors. Production build
+        // (`npm run build` / `npm run preview`) keeps the PWA SW enabled.
+        enabled: false,
       },
     }),
   ],
