@@ -2,6 +2,21 @@
 
 > **Smart parking management** — Budapest bevásárlóközpontok valós idejű parkolóhely‑kihasználtsága, foglalási flow, admin analitika. **Frontend (React + Vite + MUI) + Backend (Express + SQLite + JWT) + IoT szimuláció**, Vercel serverless vagy Docker compose deploy.
 
+## 🌐 Élő demó
+
+**Production URL**: <https://szakdolgozat-chi.vercel.app/>
+
+| Vizsgálat | URL | Várt |
+|---|---|---|
+| Frontend | <https://szakdolgozat-chi.vercel.app/> | HTTP 200, publikus landing |
+| Health endpoint | <https://szakdolgozat-chi.vercel.app/api/health> | `{"status":"ok",...}` |
+| Shopping centers | <https://szakdolgozat-chi.vercel.app/api/shopping-centers> | 7 budapesti központ JSON |
+| Dashboard KPI | <https://szakdolgozat-chi.vercel.app/api/dashboard/stats> | aggregált KPI |
+
+**Admin login a felületen** (`/login`):
+- `admin@parkvision.hu` / `admin123`
+- `visitor@parkvision.hu` / `visitor123`
+
 > **Bilicki tanár úr számára** — a [`SCORECARD.md`](SCORECARD.md) pontonként mutatja, hogy a 2026‑04‑15‑i visszajelzés melyik kritikájára mit változtattunk a Sprint 02 push‑ban (v0.4.0). A részletes szakdolgozati artifact‑ek a [`sprints/02/`](sprints/02/) alatt élnek.
 
 ---
