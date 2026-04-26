@@ -6,9 +6,11 @@
   "nav": {
     "dashboard": "Dashboard",
     "shoppingCenters": "Shopping Centers",
+    "parkingSpaces": "Parking Spaces",
     "admin": "Admin",
     "map": "Map",
-    "reservations": "Reservations"
+    "reservations": "Reservations",
+    "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -159,7 +161,17 @@
     "invalidCredentials": "Invalid email or password",
     "loginError": "Login error occurred",
     "demoCredentials": "Demo credentials",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "backToHome": "Back to home",
+    "errors": {
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid email format.",
+      "passwordRequired": "Password is required.",
+      "passwordShort": "Password must be at least 6 characters.",
+      "titleInvalid": "Invalid credentials",
+      "titleNetwork": "Server unreachable",
+      "titleUnknown": "Login error"
+    }
   },
   "public": {
     "findParking": "Find Parking",
@@ -186,6 +198,81 @@
     },
     "noDataAvailable": "No data available",
     "loading": "Loading..."
+  },
+  "parkingSpaces": {
+    "title": "Parking Spaces",
+    "subtitle": "Live status of individual parking spots, by zone.",
+    "filter": "Filter by status",
+    "filterStatus": "Filter by status",
+    "allSpaces": "All",
+    "onlyOccupied": "Occupied only",
+    "onlyFree": "Free only",
+    "totalSpaces": "Total spaces",
+    "occupied": "Occupied",
+    "free": "Free",
+    "results": "results",
+    "searchPlaceholder": "Search by ID or zone...",
+    "tableHeaders": {
+      "id": "ID",
+      "status": "Status",
+      "area": "Zone",
+      "updated": "Updated"
+    },
+    "noSpacesTitle": "No parking spaces yet",
+    "noSpacesMessage": "Sensor data will appear here.",
+    "noResultsTitle": "No matches",
+    "noResultsMessage": "Try a different filter or search term.",
+    "addParkingSpace": "Add parking space"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Profile, notifications, and payment.",
+    "save": "Save",
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Basic info and contact",
+      "name": "Name",
+      "email": "Email address",
+      "emailLocked": "Email address cannot be changed.",
+      "phone": "Phone",
+      "role": "Role"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "When you want emails or push messages",
+      "email": "Email notifications for reservations",
+      "push": "Push notifications (mobile)",
+      "occupancyAlert": "Alert at 90%+ occupancy"
+    },
+    "payment": {
+      "title": "Payment method",
+      "subtitle": "Default payment for reservations",
+      "methods": {
+        "card": "Credit card",
+        "paypal": "PayPal",
+        "invoice": "Invoice"
+      },
+      "cardInfo": "Stored card: **** **** **** {{last4}} (encrypted)"
+    },
+    "toast": {
+      "saved": "Settings saved."
+    }
+  },
+  "parkingDetail": {
+    "eyebrow": "Shopping center",
+    "kpiOccupancy": "Current occupancy",
+    "kpiFree": "Available spaces",
+    "kpiStatus": "Status",
+    "totalCapacity": "total",
+    "todayTrend": "Today's occupancy trend",
+    "weeklyHeatmap": "Weekly occupancy heatmap",
+    "heatmapHint": "Hourly average occupancy over the past 7 days. Darker = higher occupancy.",
+    "noTrendData": "Not enough historical data yet.",
+    "statusLabel": {
+      "success": "Optimal",
+      "warning": "High load",
+      "error": "Full"
+    }
   },
   "reservation": {
     "title": "Reserve a parking spot",

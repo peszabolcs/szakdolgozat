@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -79,9 +80,27 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_PROXY_TARGET || 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['node_modules', 'dist', 'server', 'api', 'sprints'],
+    coverage: {
+      reportsDirectory: 'sprints/02/reports/coverage',
+      reporter: ['text', 'json', 'html', 'cobertura', 'lcov'],
+      exclude: ['node_modules', 'dist', 'server', 'api', '**/*.test.{ts,tsx}', 'src/test/**', 'src/mocks/**'],
+    },
   },
 });

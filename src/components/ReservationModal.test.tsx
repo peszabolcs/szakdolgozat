@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
 import { SnackbarProvider } from 'notistack';
+import { AuthProvider } from '../contexts/AuthContext';
 import i18n from '../i18n/config';
 import ReservationModal from './ReservationModal';
 import type { ShoppingCenter } from '../types';
@@ -37,14 +37,16 @@ function renderModal(preselectedCenterId?: string) {
   return render(
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={client}>
-        <SnackbarProvider>
-          <ReservationModal
-            open
-            onClose={() => undefined}
-            centers={centers}
-            preselectedCenterId={preselectedCenterId}
-          />
-        </SnackbarProvider>
+        <AuthProvider>
+          <SnackbarProvider>
+            <ReservationModal
+              open
+              onClose={() => undefined}
+              centers={centers}
+              preselectedCenterId={preselectedCenterId}
+            />
+          </SnackbarProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </I18nextProvider>
   );

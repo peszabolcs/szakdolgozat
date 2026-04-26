@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient as axios } from '../utils/apiClient';
 import type { ParkingSpace } from '../types';
 
 export const useParkingSpaces = () => {

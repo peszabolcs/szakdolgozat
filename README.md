@@ -1,41 +1,46 @@
-# ParkVision Frontend MVP
+# ParkVision
 
-A ParkVision egy okos parkolásmenedzsment rendszer front‑end MVP‑je. Ez a repository szakdolgozati keretben készül: **frontend‑first** megvalósítás, mockolt API‑val, valós idejű parkolóhely‑kihasználtsági UX‑szel, foglalási flow‑val és teljes körű admin felülettel.
+> **Smart parking management** — Budapest bevásárlóközpontok valós idejű parkolóhely‑kihasználtsága, foglalási flow, admin analitika. **Frontend (React + Vite + MUI) + Backend (Express + SQLite + JWT) + IoT szimuláció**, Vercel serverless vagy Docker compose deploy.
 
-> **Bilicki tanár úr számára** — a szakdolgozati artifacts a [`sprints/`](sprints/) mappa alatt, egyenként a milestone‑ok szerint. A `sprints/02/` az aktív sprint, ott találhatók az ADR‑ek, user storyk, wireframe‑ek, Gherkin acceptance tesztek, Terraform IaC, és az AI usage log.
+> **Bilicki tanár úr számára** — a [`SCORECARD.md`](SCORECARD.md) pontonként mutatja, hogy a 2026‑04‑15‑i visszajelzés melyik kritikájára mit változtattunk a Sprint 02 push‑ban (v0.4.0). A részletes szakdolgozati artifact‑ek a [`sprints/02/`](sprints/02/) alatt élnek.
 
 ---
 
 ## Tartalomjegyzék
 
-- [Gyors áttekintés](#gyors-áttekintés)
+- [Mit lát a felhasználó](#mit-lát-a-felhasználó)
 - [Telepítés és futtatás](#telepítés-és-futtatás)
-- [Sprint deliverables](#sprint-deliverables)
 - [Architektúra](#architektúra)
-- [Funkciók](#funkciók)
+- [Sprint deliverables](#sprint-deliverables)
+- [Backend API](#backend-api)
 - [Foglalási flow](#foglalási-flow)
-- [Mock API + szcenáriók](#mock-api--szcenáriók)
 - [Tesztelés](#tesztelés)
 - [CI/CD](#cicd)
-- [I18n + téma](#i18n--téma)
-- [PWA + offline](#pwa--offline)
 - [Mappa‑struktúra](#mappa-struktúra)
 - [Verzió + roadmap](#verzió--roadmap)
 
 ---
 
-## Gyors áttekintés
+## Mit lát a felhasználó
 
-**Cél**: reszponzív, többnyelvű, PWA‑képes felület a budapesti bevásárlóközpontok parkolóinak valós idejű kihasználtsági információival, foglalási lehetőséggel.
+### Publikus oldal (`/`)
+- Gradient hero CTA‑val: **„Foglalás indítása"** + **„Központok böngészése"** (smooth scroll).
+- Interaktív Leaflet térkép geolokációval, kereséssel.
+- 7 budapesti bevásárlóközpont kártyán élő foglaltsággal — minden kártyán „Foglalás" gomb (ReservationModal).
 
-**Kiemelt képességek**:
+### Admin felület (bejelentkezés után, `/admin/...`)
+| Útvonal | Komponens | Mit csinál |
+|---|---|---|
+| `/admin/dashboard` | `DashboardPage` | 5 KPI (központok, kapacitás, foglalt, szabad, átlag %), accent színek + skeleton |
+| `/admin/shopping-centers` | `ShoppingCentersPage` | Tábla foglaltság szerinti szűrővel |
+| `/admin/centers/:id` | `ParkingDetailPage` | Hero + 3 KPI + 24h area chart + 7×24 occupancy heatmap |
+| `/admin/parking-spaces` | `ParkingSpacesPage` | Egyedi parkolóhelyek grid (free/occupied chip, search, paginálás) |
+| `/admin/map` | `MapPage` | Leaflet térkép, zónafilter |
+| `/admin/reservations` | `ReservationsPage` | Foglalások (Upcoming / Past tabok, lemondás) |
+| `/admin/admin-panel` | `AdminPage` | Recharts analitika (occupancy trend, capacity, distribution) |
+| `/admin/settings` | `SettingsPage` | Profil, értesítések, fizetési mód |
 
-- Publikus landing page Leaflet‑térképpel + parkolóhely‑foglalási flow.
-- Admin felület: dashboard (KPI), shopping centers tábla szűrőkkel, foglalások kezelése, Recharts analitika.
-- Mock API (MSW) `normal` / `empty` / `error` szcenáriókkal.
-- Mock auth (`admin@parkvision.hu` / `admin123`).
-- HU/EN nyelv, light/dark téma, PWA install + offline indicator.
-- CI: lint + build + test (≥ 60% coverage cél).
+**Mobile**: `<md` alatt sidebar → hamburger menu, `<800px` adaptív KPI/Grid.
 
 ---
 
@@ -43,11 +48,11 @@ A ParkVision egy okos parkolásmenedzsment rendszer front‑end MVP‑je. Ez a r
 
 ### Előfeltételek
 
-- Node.js 20.x (LTS)
-- npm 10.x
-- Terraform 1.5+ (csak az IaC futtatásához, opcionális)
+- **Node.js 20.x** (LTS)
+- **npm 10.x**
+- *(Opcionális)* Docker + Docker Compose, vagy Terraform 1.5+
 
-### Lépések
+### A) Lokális fejlesztés (frontend + backend egyszerre)
 
 ```bash
 git clone https://github.com/peszabolcs/szakdolgozat.git
@@ -56,111 +61,143 @@ npm install
 npm run dev
 ```
 
-Alapértelmezett URL: `http://localhost:5173`.
+Ez egy parancsban indítja:
+- **Vite frontend**: `http://localhost:5173`
+- **Express backend**: `http://localhost:3001`
+- A frontend `/api/*` kérései proxy‑zódnak a backendre (`vite.config.ts`).
 
-### Mock szcenárió kapcsolók
+**Bejelentkezés**:
+- `admin@parkvision.hu` / `admin123` (admin szerep)
+- `visitor@parkvision.hu` / `visitor123` (visitor szerep)
+
+### B) Docker compose (egyetlen parancs)
 
 ```bash
-VITE_MOCK_SCENARIO=normal npm run dev   # Default — 7 bevásárlóközpont
-VITE_MOCK_SCENARIO=empty  npm run dev   # Üres állapot teszt
-VITE_MOCK_SCENARIO=error  npm run dev   # API hiba teszt
+npm run build           # frontend dist/
+docker compose up -d
 ```
+
+- **Web**: `http://localhost:8080` (nginx + SPA + API proxy)
+- **API**: `http://localhost:3001/api/health`
+- SQLite perzisztens volume‑ben (`parkvision-data:/data`).
+
+### C) Vercel serverless deploy
+
+```bash
+npm install -g vercel
+vercel link
+vercel deploy --prod
+```
+
+A `vercel.json` `rewrites`‑szel a `/api/*` URL‑ek a `api/index.ts` serverless függvénybe mennek (Express `createApp()`).
+
+### D) MSW fallback (backend nélküli demo)
+
+Ha csak a frontendet akarod nézni MSW mock‑okkal:
+
+```bash
+VITE_USE_MSW=true npm run dev:web
+```
+
+`VITE_MOCK_SCENARIO=normal|empty|error` szabályozza a mock választ.
 
 ### NPM scriptek
 
 | Parancs | Mit csinál |
 |---|---|
-| `npm run dev` | Vite dev server + MSW worker |
-| `npm run build` | TypeScript check + production build (`dist/`) |
-| `npm run preview` | Production build helyi futtatása |
-| `npm run lint` | ESLint, **zero warnings policy** |
-| `npm test` | Vitest egyszer fut le |
-| `npm run test:watch` | Vitest watch mode |
-| `npm run test:ui` | Vitest UI |
-| `npm run test:coverage` | Coverage report a `sprints/02/reports/coverage/`‑ban |
-| `npm run ci-local` | Lint + test + coverage + build (mint a CI) |
-
----
-
-## Sprint deliverables
-
-**Sprint 02 (aktív)** — minden artifact a [`sprints/02/`](sprints/02/) alatt:
-
-| Artifact | Hely |
-|---|---|
-| Termékspecifikáció v0.2 | [`sprints/02/docs/spec/product_spec_v0.2.md`](sprints/02/docs/spec/product_spec_v0.2.md) |
-| 6 INVEST user story | [`sprints/02/docs/stories/user_stories.md`](sprints/02/docs/stories/user_stories.md) |
-| ADR‑0001 Frontend platform | [`sprints/02/docs/adr/0001-frontend-platform.md`](sprints/02/docs/adr/0001-frontend-platform.md) |
-| ADR‑0002 IaC stratégia | [`sprints/02/docs/adr/0002-iac-strategy.md`](sprints/02/docs/adr/0002-iac-strategy.md) |
-| ADR‑0003 Foglalás storage | [`sprints/02/docs/adr/0003-reservation-storage.md`](sprints/02/docs/adr/0003-reservation-storage.md) |
-| Definition of Ready / Done | [`sprints/02/docs/process/dor_dod.md`](sprints/02/docs/process/dor_dod.md) |
-| Traceability matrix | [`sprints/02/docs/traceability.md`](sprints/02/docs/traceability.md) |
-| Wireframe‑ek (5 db) | [`sprints/02/wireframes/`](sprints/02/wireframes/) |
-| Gherkin acceptance tesztek | [`sprints/02/tests/acceptance/`](sprints/02/tests/acceptance/) |
-| Terraform Vercel deploy | [`sprints/02/infra/terraform/`](sprints/02/infra/terraform/) |
-| AI usage log | [`sprints/02/ai/ai_log.jsonl`](sprints/02/ai/ai_log.jsonl) |
-| Coverage report (CI artifact) | [`sprints/02/reports/coverage/`](sprints/02/reports/coverage/) |
-
-**Sprint 01** — research & architecture, lezárt: [`sprints/01/README.md`](sprints/01/README.md).
+| `npm run dev` | **Frontend + backend egyszerre** (concurrently) |
+| `npm run dev:web` | Csak Vite frontend |
+| `npm run server:dev` | Csak Express backend (tsx watch) |
+| `npm run build` | Frontend prod build (`dist/`) |
+| `npm run server:build` | Backend TS build (`server/dist/`) |
+| `npm run server:start` | Prod backend (`node server/dist/index.js`) |
+| `npm run lint` | ESLint, **zero warnings** |
+| `npm test` | Frontend Vitest |
+| `npm run test:coverage` | Frontend coverage |
+| `npm run server:test` | Backend Vitest (supertest) |
+| `npm run test:all` | Frontend + backend tesztek |
+| `npm run ci-local` | Lint + test + coverage + server:test + build |
 
 ---
 
 ## Architektúra
 
 ```
-React 18 + Vite + TypeScript 5.0
-  ↓
-MUI 5 (theme: teal/orange identity, dark+light)
-  ↓
-Page (e.g. PublicHomePage, DashboardPage, ReservationsPage)
-  ↓
-Custom hook (TanStack Query, e.g. useShoppingCenters, useReservations)
-  ↓
-axios → /api/*  (or localStorage for reservations)
-  ↓
-MSW handler (only in dev/test)
-  ↓
-Mock data (src/mocks/data/) or localStorage state
+┌─────────────────────────────┐         ┌─────────────────────────────┐
+│  React 18 SPA               │         │  Express 4 API              │
+│  Vite + TS + MUI 5          │         │  better-sqlite3 (file/mem)  │
+│  TanStack Query             │  HTTP   │  JWT (jsonwebtoken)         │
+│  Framer Motion              │ ───────►│  bcryptjs                   │
+│  notistack toasts           │         │  Zod request validation     │
+│  Leaflet + Recharts         │         │  IoT simulator (setInterval) │
+└──────────┬──────────────────┘         └──────────┬──────────────────┘
+           │                                        │
+           │  axios (apiClient)                     │  better-sqlite3
+           │  Bearer header                         │  schema + seed
+           ▼                                        ▼
+   ┌────────────────┐                       ┌────────────────┐
+   │  /api/auth/*   │                       │  users         │
+   │  /api/...      │                       │  shopping_*    │
+   │  Vite proxy    │                       │  reservations  │
+   │  (dev) /       │                       │  occupancy_*   │
+   │  Vercel        │                       └────────────────┘
+   │  rewrites      │
+   │  (prod)        │
+   └────────────────┘
 ```
 
-### Routing
-
-| Útvonal | Hozzáférés | Komponens |
-|---|---|---|
-| `/` | publikus | `PublicHomePage` (hero + map + center grid + reservation modal) |
-| `/login` | publikus | `LoginPage` |
-| `/admin/dashboard` | védett | `DashboardPage` |
-| `/admin/shopping-centers` | védett | `ShoppingCentersPage` |
-| `/admin/map` | védett | `MapPage` |
-| `/admin/reservations` | védett | `ReservationsPage` *(új Sprint 02)* |
-| `/admin/admin-panel` | védett | `AdminPage` |
-
-### State pattern
-
-Minden adat‑oldal kezeli a négy állapotot: **loading** (`<*Skeleton />`), **error** (`<ErrorBanner />` + retry), **empty** (`<EmptyState />` + CTA), **success**.
-
-```typescript
-const { data, isLoading, isError, error, refetch } = useShoppingCenters();
-if (isLoading) return <DashboardSkeleton />;
-if (isError) return <ErrorBanner message={...} onRetry={refetch} />;
-if (!data?.length) return <EmptyState ... />;
-return <Content data={data} />;
-```
+**State pattern** minden adat‑oldalon: `loading` (skeleton) → `error` (ErrorBanner + retry) → `empty` (illusztrált EmptyState + CTA) → `success`.
 
 ---
 
-## Funkciók
+## Sprint deliverables
 
-- ✅ Publikus landing page gradient hero‑val + scroll‑triggered card animációkkal
-- ✅ Interaktív Leaflet‑térkép geolokációval és kereséssel
-- ✅ Bevásárlóközpontok grid + tábla, foglaltság szerinti szűrés
-- ✅ **Parkolóhely‑foglalási flow** (`ReservationModal` + `/admin/reservations`)
-- ✅ Admin dashboard polished StatCard‑okkal (gradient, trend, accent‑szín)
-- ✅ Recharts analitika (occupancy trend, capacity, distribution)
-- ✅ Empty / Error / Loading state mindenhol illusztrált skeletonnel
-- ✅ Toast notifikációk (notistack) sikeres és hibás műveletekre
-- ✅ HU / EN nyelv, light / dark téma, mindkettő perzisztens
-- ✅ PWA install prompt + offline indicator
+A szakdolgozati artifact‑ek a [`sprints/02/`](sprints/02/) alatt:
+
+| Artifact | Hely |
+|---|---|
+| Termékspecifikáció v0.2 | [`sprints/02/docs/spec/product_spec_v0.2.md`](sprints/02/docs/spec/product_spec_v0.2.md) |
+| 6 INVEST user story (incl. US‑06 foglalás) | [`sprints/02/docs/stories/user_stories.md`](sprints/02/docs/stories/user_stories.md) |
+| 6 ADR | [`sprints/02/docs/adr/`](sprints/02/docs/adr/) |
+| Definition of Ready / Done | [`sprints/02/docs/process/dor_dod.md`](sprints/02/docs/process/dor_dod.md) |
+| Traceability matrix | [`sprints/02/docs/traceability.md`](sprints/02/docs/traceability.md) |
+| 5 wireframe | [`sprints/02/wireframes/`](sprints/02/wireframes/) |
+| 3 Gherkin acceptance feature | [`sprints/02/tests/acceptance/`](sprints/02/tests/acceptance/) |
+| Vercel Terraform IaC | [`sprints/02/infra/terraform/`](sprints/02/infra/terraform/) |
+| AI usage log | [`sprints/02/ai/ai_log.jsonl`](sprints/02/ai/ai_log.jsonl) |
+
+**ADR‑ek**:
+- [ADR‑0001 — Frontend platform](sprints/02/docs/adr/0001-frontend-platform.md) (React + Vite + Vercel)
+- [ADR‑0002 — IaC stratégia](sprints/02/docs/adr/0002-iac-strategy.md)
+- [ADR‑0003 — Reservation storage](sprints/02/docs/adr/0003-reservation-storage.md) (localStorage MVP)
+- [ADR‑0004 — Backend stack](sprints/02/docs/adr/0004-backend-stack.md) (**ÚJ**: Express + SQLite)
+- [ADR‑0005 — Auth strategy](sprints/02/docs/adr/0005-auth-strategy.md) (**ÚJ**: JWT + bcrypt)
+- [ADR‑0006 — Deploy strategy](sprints/02/docs/adr/0006-deploy-strategy.md) (**ÚJ**: Vercel + Docker)
+
+---
+
+## Backend API
+
+Részletek: [`server/`](server/). 12+ endpoint:
+
+| Endpoint | Method | Auth | Leírás |
+|---|---|---|---|
+| `/api/health` | GET | — | Liveness check |
+| `/api/auth/login` | POST | — | JWT (7 nap), Zod email validation |
+| `/api/auth/me` | GET | Bearer | Aktuális user |
+| `/api/shopping-centers` | GET | — | 7 budapesti központ (élő occupancy) |
+| `/api/shopping-centers/:id` | GET | — | Egy konkrét központ |
+| `/api/shopping-centers/:id/history` | GET | — | 7 napos occupancy historikum |
+| `/api/parking-spaces` | GET | — | Egyedi helyek + zóna |
+| `/api/areas` | GET | — | 5 zóna (kapacitás + foglaltság) |
+| `/api/reservations` | GET | Bearer | Saját foglalások |
+| `/api/reservations` | POST | Bearer | Új foglalás (validáció: past / duplicate / full) |
+| `/api/reservations/:id` | DELETE | Bearer | Foglalás lemondás |
+| `/api/dashboard/stats` | GET | — | KPI aggregáció |
+
+**IoT szimulátor** (`server/src/simulator/iot.ts`): 30 mp‑enként ±5 occupancy random change minden központra, audit log az `occupancy_history` táblába.
+
+**Adatbázis**: `better-sqlite3`. Lokálisan: `server/data/parkvision.db` (file). Vercel: in‑memory (cold start = reseed). 6 tábla: `users`, `shopping_centers`, `parking_spaces`, `areas`, `reservations`, `occupancy_history`.
 
 ---
 
@@ -170,86 +207,59 @@ return <Content data={data} />;
 
 **Komponensek**: `src/components/ReservationModal.tsx`, `src/pages/ReservationsPage.tsx`, `src/hooks/useReservations.ts`.
 
-**Adat**: `localStorage` kulcs `parkvision.reservations.v1` alatt — egy `Reservation[]` tömb. Sprint 03‑ban backend API‑val cserélhető a hook interface módosítása nélkül (lásd [ADR‑0003](sprints/02/docs/adr/0003-reservation-storage.md)).
+**Hibrid storage**:
+- **Bejelentkezve** → `POST /api/reservations` (perzisztens backend, JWT‑védett).
+- **Nincs auth** → `localStorage` (`parkvision.reservations.v1`) — guest demo mode.
 
-**Validáció**:
+**Validáció (mindkét rétegben)**:
+- Múlt időpont → 422 + `code: 'past'`.
+- Telített központ → 409 + `code: 'full'`.
+- Duplikált foglalás → 409 + `code: 'duplicate'`.
 
-- Múltbéli időpont → inline error, confirm gomb disabled.
-- 100% telített központ → warning toast + foglalás letiltva.
-- Duplikált foglalás (ugyanaz a center+slot) → warning toast.
-
-**Próba lokálisan**:
-
+**Próba**:
 1. `npm run dev`
-2. Nyisd meg `http://localhost:5173`‑t.
-3. Bármelyik központ kártyán „Foglalás" gomb → modal nyílik.
-4. Válassz dátumot + 1‑órás időslot‑ot → „Foglalás megerősítése".
-5. Sikertoast jelenik meg, a foglalás megjelenik a `/admin/reservations` oldalon (admin login után).
-
----
-
-## Mock API + szcenáriók
-
-A backend hiányát az [MSW](https://mswjs.io/) pótolja. A handler‑ek `src/mocks/handlers/`‑ben vannak, az adatok `src/mocks/data/`‑ban.
-
-| Szcenárió | Mit ad vissza |
-|---|---|
-| `normal` (default) | 7 budapesti bevásárlóközpont reális adatokkal |
-| `empty` | Üres tömb → empty state UI tesztelése |
-| `error` | 500 Internal Server Error → ErrorBanner + retry tesztelése |
+2. Nyisd meg `http://localhost:5173/`
+3. Bármelyik központ kártyán „Foglalás" → modal.
+4. Idő + slot → „Foglalás megerősítése" → success toast.
+5. Loginolj be (`admin@parkvision.hu` / `admin123`) → `/admin/reservations`-en látszik.
 
 ---
 
 ## Tesztelés
 
-Vitest + React Testing Library + MSW.
+Vitest + React Testing Library + supertest (backend) + MSW (frontend).
 
 ```bash
-npm test                  # Egyszer lefut
-npm run test:watch        # Watch mode
-npm run test:ui           # Vizuális UI
-npm run test:coverage     # Coverage report
+npm test               # Frontend Vitest (40 teszt)
+npm run server:test    # Backend Vitest + supertest (14 teszt)
+npm run test:all       # Mindkettő
+npm run test:coverage  # Frontend coverage → sprints/02/reports/coverage/
 ```
 
-A coverage report a [`sprints/02/reports/coverage/`](sprints/02/reports/coverage/) mappába kerül (CI artifact).
+**Tesztek összesen**: **54** (40 frontend + 14 backend).
 
-**Fontos test fájlok**:
+Backend teszt fájlok:
+- `server/tests/auth.test.ts` — JWT login + me (7 teszt)
+- `server/tests/reservations.test.ts` — CRUD + validáció + dashboard (7 teszt)
 
-- `src/hooks/useReservations.test.tsx` — happy path + 4 validation scenario
-- `src/components/ReservationModal.test.tsx` — render + disabled állapotok
-- `src/components/EmptyState.test.tsx`, `ErrorBanner.test.tsx`, `StatCard.test.tsx`
-- `src/hooks/useShoppingCenters` / `useParkingSpaces` / `useAreas` — meglévő tesztek
+Frontend kulcs tesztek:
+- `src/hooks/useReservations.test.tsx` — 5 scenario (create, past, duplicate, cancel, empty)
+- `src/components/ReservationModal.test.tsx` — render + state
+- `src/pages/{Dashboard,ParkingSpaces,Areas}Page.test.tsx` — page integráció
 
 ---
 
 ## CI/CD
 
-3 GitHub Actions workflow a [`.github/workflows/`](.github/workflows/) alatt:
+5 GitHub Actions workflow a [`.github/workflows/`](.github/workflows/):
 
 | Workflow | Trigger | Mit csinál |
 |---|---|---|
-| [`test.yml`](.github/workflows/test.yml) | push / PR `main`‑re | install → lint → build → test:coverage → upload coverage artifact |
-| [`build.yml`](.github/workflows/build.yml) | push / PR `main`‑re | install → build → upload `dist/` artifact |
-| [`terraform.yml`](.github/workflows/terraform.yml) | `sprints/02/infra/terraform/**` változás | fmt → init → validate → plan (token‑függő) |
-
-A `terraform plan` csak akkor fut le, ha a `VERCEL_API_TOKEN` GitHub secret konfigurálva van. Sprint 02‑ben nem kötelező, Sprint 03‑ban élesedik az `apply`.
-
----
-
-## I18n + téma
-
-- Magyar / angol (`src/i18n/locales/hu.json`, `en.json`).
-- Téma kapcsoló (`light` / `dark`), perzisztens `localStorage`‑ben.
-- Theme: `src/theme/theme.ts` — teal `#26636f` + arany `#f9a825`, gradient buttons, blur Cards.
-
----
-
-## PWA + offline
-
-- Vite PWA plugin (`vite-plugin-pwa`) — auto service worker update, asset precache.
-- `OfflineIndicator` komponens kapcsolat‑monitorral.
-- `PWAInstallPrompt` az install hívásra.
-- Offline cache `localforage`‑on keresztül a `src/stores/offlineStore.ts`‑ben.
+| [`test.yml`](.github/workflows/test.yml) | push / PR `main`‑re | Frontend lint + build + test:coverage |
+| [`build.yml`](.github/workflows/build.yml) | push / PR `main`‑re | Vite production build artifact |
+| [`backend.yml`](.github/workflows/backend.yml) | `server/**` változás | Express tsc + supertest |
+| [`docker.yml`](.github/workflows/docker.yml) | `Dockerfile` változás | Multi‑stage Docker build verifikáció |
+| [`terraform.yml`](.github/workflows/terraform.yml) | `sprints/02/infra/terraform/**` | fmt + init + validate (+ plan ha token) |
 
 ---
 
@@ -257,49 +267,79 @@ A `terraform plan` csak akkor fut le, ha a `VERCEL_API_TOKEN` GitHub secret konf
 
 ```
 .
-├── .github/workflows/         CI workflows (test, build, terraform)
+├── .github/workflows/         5 GitHub Actions workflow
+├── api/
+│   └── index.ts               Vercel serverless entry
+├── docker/
+│   └── nginx.conf             SPA proxy konfig
+├── Dockerfile                 Multi-stage Node + better-sqlite3
+├── docker-compose.yml         api + web (nginx)
 ├── sprints/                   Szakdolgozati sprint deliverables
 │   ├── 01/                    Sprint 01 — research & architecture (zárt)
-│   └── 02/                    Sprint 02 — MVP (aktív)
-│       ├── docs/              Spec, user stories, ADRs, DoR/DoD, traceability
-│       ├── wireframes/        ASCII wireframe-ek
-│       ├── tests/acceptance/  Gherkin feature fájlok
+│   └── 02/                    Sprint 02 — MVP + backend (aktív)
+│       ├── docs/              Spec, user stories, 6 ADR, DoR/DoD, traceability
+│       ├── wireframes/        ASCII wireframe-ek (5)
+│       ├── tests/acceptance/  Gherkin feature fájlok (3)
 │       ├── infra/terraform/   IaC Vercel deployhoz
 │       ├── ai/                AI usage log (jsonl)
 │       └── reports/coverage/  Vitest coverage output
+├── server/
+│   ├── src/
+│   │   ├── app.ts             Express app factory
+│   │   ├── index.ts           Local dev entry (port 3001)
+│   │   ├── db/                schema.ts, seed.ts, client.ts
+│   │   ├── auth/              jwt.ts, middleware.ts
+│   │   ├── routes/            auth, shoppingCenters, parkingSpaces, areas, reservations, dashboard
+│   │   └── simulator/         iot.ts (occupancy szimulátor)
+│   ├── tests/                 supertest auth + reservations
+│   └── tsconfig.json
 ├── src/
-│   ├── components/            UI komponensek (+ skeletons/, tests)
-│   ├── pages/                 Route oldalak
-│   ├── hooks/                 TanStack Query hookok
+│   ├── components/            UI + skeletons + ReservationModal
+│   ├── pages/                 8 oldal (Public + 7 admin)
+│   ├── hooks/                 TanStack Query hookok (useShoppingCenters, useReservations, ...)
 │   ├── contexts/              Auth + Theme
-│   ├── mocks/                 MSW handlerek + mock data
-│   ├── stores/                Offline cache (localforage)
+│   ├── mocks/                 MSW handlerek (fallback)
 │   ├── i18n/                  HU + EN fordítások
 │   ├── types/                 Központi típusok
-│   ├── utils/                 Segédfüggvények
+│   ├── utils/                 apiClient + dataAdapters
 │   └── test/                  Test setup
-├── docs/                      Egyéb projektdokumentációk
-├── public/                    Statikus assetek + MSW worker
-└── package.json
+├── docs/
+│   ├── ai-usage-draft.md      ~2 oldal vázlat a thesis MI fejezethez
+│   └── ux/                    UX dokumentáció
+├── SCORECARD.md               Pontonkénti reakció a tanári visszajelzésre
+├── README.md                  Ez a fájl
+├── package.json
+├── vite.config.ts             Frontend build + dev proxy + test config
+├── vitest.config.ts           Vitest frontend config (kizárja a server/-t)
+├── vitest.server.config.ts    Vitest backend config (singleFork)
+└── vercel.json                Vercel deploy konfig
 ```
 
 ---
 
 ## Verzió + roadmap
 
-**Verzió:** 0.3.0 — *Sprint 02 (Apr 26, 2026)*
+**Verzió:** 0.4.0 — *Sprint 02 / M1 push (2026‑04‑26)*
 
-**Roadmap**:
+### Sprint 02 (befejezve)
+- ✅ Frontend MVP polish (gradient hero, skeletons, toasts, mobile hamburger)
+- ✅ Foglalási flow (US‑06)
+- ✅ **Valós backend** (Express + SQLite + JWT)
+- ✅ **IoT szimuláció** (`setInterval` 30s + audit history)
+- ✅ **Vercel serverless deploy** + **Docker compose**
+- ✅ 5 új képernyő (S04–S08 placeholder pótlása)
+- ✅ Auth: bcrypt + JWT + axios interceptor + 401 auto‑logout
+- ✅ Mobile responsive + a11y polish
+- ✅ 5 GitHub Actions workflow
+- ✅ 54 teszt (40 frontend + 14 backend)
 
-- 🟡 **Sprint 02 (aktív)** — MVP + reservation flow + visual polish
-- 🟢 **Sprint 03 (May 3 — May 23, 2026)** — Backend API integráció, E2E (Playwright), Lighthouse CI, Terraform `apply` automatizálás
-
-**Korábban készült dokumentumok** a fő projektgyökérben (legacy):
-
-- [PWA_ENHANCEMENT_SUMMARY.md](PWA_ENHANCEMENT_SUMMARY.md)
-- [PWA_TEST_REPORT.md](PWA_TEST_REPORT.md)
-- [MSW_FIX_APPLIED.md](MSW_FIX_APPLIED.md)
-- [project_plan.md](project_plan.md)
+### Sprint 03 (tervezett — 2026‑05‑03 → 2026‑05‑23)
+- 🟡 Vercel Postgres / Turso integráció (perzisztens prod DB)
+- 🟡 OAuth2 / OIDC valódi identitásszolgáltatóval
+- 🟡 E2E tesztek Playwright‑tel
+- 🟡 Lighthouse CI mobile + desktop
+- 🟡 Refresh token + HttpOnly cookie auth
+- 🟡 Push notifications (Web Push API)
 
 ---
 
@@ -309,5 +349,5 @@ MIT
 
 ---
 
-**Verzió:** 0.3.0
-**Utoljára frissítve:** 2026‑04‑26
+**Verzió:** 0.4.0
+**Utoljára frissítve:** 2026‑04‑26 (M1 push)
