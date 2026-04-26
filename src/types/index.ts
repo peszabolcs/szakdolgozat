@@ -40,6 +40,7 @@ export interface ShoppingCenter {
   openingHours: string;
   imageUrl?: string;
   description: string;
+  updatedAt?: string;
 }
 
 export interface ApiError {

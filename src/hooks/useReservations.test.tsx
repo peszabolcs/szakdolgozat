@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import { AuthProvider } from '../contexts/AuthContext';
 import {
   useReservations,
   useCreateReservation,
@@ -15,7 +16,9 @@ function createWrapper() {
     defaultOptions: { queries: { retry: false } },
   });
   return ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>{children}</AuthProvider>
+    </QueryClientProvider>
   );
 }
 
