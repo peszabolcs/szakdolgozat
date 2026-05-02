@@ -1,0 +1,67 @@
+erDiagram
+    USERS ||--o{ RESERVATIONS : "felhasználó foglal"
+    SHOPPING_CENTERS ||--o{ PARKING_SPACES : "tartalmaz"
+    SHOPPING_CENTERS ||--o{ RESERVATIONS : "fogad"
+    SHOPPING_CENTERS ||--o{ OCCUPANCY_HISTORY : "rögzít"
+
+    USERS {
+        TEXT id PK
+        TEXT email UK
+        TEXT name
+        TEXT role "admin | visitor"
+        TEXT password_hash
+        TEXT created_at
+    }
+
+    SHOPPING_CENTERS {
+        TEXT id PK
+        TEXT name
+        TEXT address
+        REAL lat
+        REAL lng
+        INTEGER capacity
+        INTEGER occupied
+        TEXT opening_hours
+        TEXT description
+        TEXT image_url
+        TEXT updated_at
+    }
+
+    PARKING_SPACES {
+        TEXT id PK
+        TEXT center_id FK
+        TEXT label
+        TEXT status "occupied | free"
+        TEXT updated_at
+    }
+
+    AREAS {
+        TEXT id PK
+        TEXT name
+        TEXT description
+        INTEGER capacity
+        INTEGER occupied
+        TEXT status "active | inactive"
+        REAL lat
+        REAL lng
+        TEXT address
+    }
+
+    RESERVATIONS {
+        TEXT id PK
+        TEXT user_id FK
+        TEXT center_id FK
+        TEXT center_name
+        TEXT slot_start
+        TEXT slot_end
+        TEXT status "active | cancelled"
+        TEXT created_at
+    }
+
+    OCCUPANCY_HISTORY {
+        INTEGER id PK
+        TEXT center_id FK
+        INTEGER occupied
+        INTEGER capacity
+        TEXT recorded_at
+    }

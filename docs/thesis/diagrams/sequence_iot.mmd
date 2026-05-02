@@ -1,0 +1,28 @@
+sequenceDiagram
+    autonumber
+    participant Sim as IoT szimulátor<br/>(setInterval, 30s)
+    participant DB as SQLite<br/>shopping_centers
+    participant Hist as SQLite<br/>occupancy_history
+    participant FE as Frontend<br/>(DashboardPage)
+    participant Q as TanStack Query<br/>(useShoppingCenters)
+    participant API as Express<br/>GET /api/shopping-centers
+
+    loop Minden 30 másodpercben
+        Sim->>DB: SELECT id, capacity, occupied FROM shopping_centers
+        DB-->>Sim: [{id, capacity, occupied}, ...]
+        loop Minden központra
+            Sim->>Sim: delta = ⌊(rand-0.5)*12⌋
+            Sim->>Sim: next = clamp(0, capacity, occupied + delta)
+            Sim->>DB: UPDATE shopping_centers<br/>SET occupied=next, updated_at=now
+            Sim->>Hist: INSERT INTO occupancy_history<br/>(center_id, occupied, capacity, recorded_at)
+        end
+    end
+
+    Note over FE,Q: A frontend párhuzamosan poll-ozza<br/>a háttér-állapotot
+
+    FE->>Q: useShoppingCenters() (mount/refetch)
+    Q->>API: GET /api/shopping-centers
+    API->>DB: SELECT * FROM shopping_centers
+    DB-->>API: aktualizált foglaltság
+    API-->>Q: JSON
+    Q-->>FE: cache + re-render<br/>(StatCard, térkép pin színe)

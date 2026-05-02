@@ -1,0 +1,32 @@
+sequenceDiagram
+    autonumber
+    actor U as Felhasználó
+    participant FE as Frontend<br/>(ReservationModal)
+    participant H as useReservations<br/>hook
+    participant Q as TanStack Query
+    participant API as Express<br/>POST /api/reservations
+    participant Z as Zod<br/>validáció
+    participant Auth as JWT<br/>middleware
+    participant DB as SQLite<br/>adatbázis
+
+    U->>FE: Kiválasztja a központot<br/>és az időslot-ot
+    FE->>FE: Form validáció<br/>(slot a jövőben?)
+    FE->>H: createReservation({ centerId, slotStart, slotEnd })
+    H->>Q: mutation
+    Q->>API: POST /api/reservations<br/>+ Authorization: Bearer <jwt>
+    API->>Auth: requireAuth(req)
+    Auth-->>API: req.user = { sub, email, role }
+    API->>Z: parseAsync(req.body)
+    Z-->>API: { centerId, slotStart, slotEnd }
+    API->>API: slot múlt-ellenőrzés
+    API->>DB: SELECT shopping_centers WHERE id=?
+    DB-->>API: { capacity, occupied, name }
+    API->>API: kapacitás check<br/>(occupied < capacity?)
+    API->>DB: SELECT FROM reservations<br/>WHERE user_id=? AND slot_start=?
+    DB-->>API: duplikáció check
+    API->>DB: INSERT INTO reservations
+    DB-->>API: ok
+    API-->>Q: 201 + reservation JSON
+    Q-->>H: invalidate cache<br/>refetch list
+    H-->>FE: success state
+    FE->>U: Toast: "Foglalás létrehozva"<br/>+ modal bezár

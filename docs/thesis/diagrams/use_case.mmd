@@ -1,0 +1,46 @@
+flowchart LR
+    %% Aktorok
+    Vendeg(("👤<br/>Vendég<br/>felhasználó"))
+    Felhasznalo(("👤<br/>Regisztrált<br/>felhasználó"))
+    Admin(("👤<br/>Admin"))
+
+    subgraph Rendszer ["ParkVision rendszer"]
+        UC1(["Bevásárlóközpontok<br/>böngészése"])
+        UC2(["Térképes<br/>elérhetőség<br/>megtekintése"])
+        UC3(["Bejelentkezés"])
+        UC4(["Központ részletes<br/>oldal megtekintése"])
+        UC5(["Parkolóhely<br/>foglalás"])
+        UC6(["Saját foglalások<br/>kezelése"])
+        UC7(["Foglalás törlése"])
+        UC8(["Beállítások<br/>módosítása<br/>(téma, nyelv)"])
+        UC9(["Vezérlőpult<br/>statisztikák"])
+        UC10(["Parkolóhelyek<br/>állapotának<br/>kezelése"])
+        UC11(["Zónák/területek<br/>kezelése"])
+        UC12(["Admin panel"])
+    end
+
+    %% Vendég kapcsolatok
+    Vendeg --- UC1
+    Vendeg --- UC2
+    Vendeg --- UC3
+
+    %% Regisztrált felhasználó kapcsolatok (örökli a vendég jogokat)
+    Felhasznalo --- UC1
+    Felhasznalo --- UC2
+    Felhasznalo --- UC4
+    Felhasznalo --- UC5
+    Felhasznalo --- UC6
+    Felhasznalo --- UC7
+    Felhasznalo --- UC8
+    Felhasznalo --- UC9
+
+    %% Admin (örökli a regisztrált felhasználó összes jogát + admin specifikus)
+    Admin --- UC9
+    Admin --- UC10
+    Admin --- UC11
+    Admin --- UC12
+
+    classDef actorClass fill:#e1f5ff,stroke:#0288d1,stroke-width:2px,color:#01579b
+    classDef ucClass fill:#fff3e0,stroke:#f57c00,stroke-width:1px,color:#e65100
+    class Vendeg,Felhasznalo,Admin actorClass
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12 ucClass
