@@ -1,6 +1,6 @@
 ---
 title: "ParkVision — Okos parkolásmenedzsment-rendszer"
-author: "Pesz Szabolcs"
+author: "Perjési Szabolcs"
 date: "2026"
 lang: hu
 ---
@@ -14,7 +14,7 @@ Informatikai Intézet
 
 # SZAKDOLGOZAT
 
-Pesz Szabolcs
+Perjési Szabolcs
 2026
 
 \newpage
@@ -28,7 +28,7 @@ Szakdolgozat
 
 | Készítette: | Témavezető: |
 |---|---|
-| **Pesz Szabolcs** | **Dr. Bilicki Vilmos** |
+| **Perjési Szabolcs** | **Dr. Bilicki Vilmos** |
 | programtervező informatikus | egyetemi adjunktus |
 | szakos hallgató | |
 
@@ -888,7 +888,7 @@ A ParkVision szakdolgozati MI-használati naplóját — amelyre ez a fejezet é
 
 # Nyilatkozat
 
-Alulírott Pesz Szabolcs programtervező informatikus szakos hallgató, kijelentem, hogy a dolgozatomat a Szegedi Tudományegyetem, Informatikai Intézet Szoftverfejlesztés Tanszékén készítettem, programtervező informatikus BSc diploma megszerzése érdekében.
+Alulírott Perjési Szabolcs programtervező informatikus szakos hallgató, kijelentem, hogy a dolgozatomat a Szegedi Tudományegyetem, Informatikai Intézet Szoftverfejlesztés Tanszékén készítettem, programtervező informatikus BSc diploma megszerzése érdekében.
 
 Kijelentem, hogy a dolgozatot más szakon korábban nem védtem meg, saját munkám eredménye, és csak a hivatkozott forrásokat (szakirodalom, eszközök, stb.) használtam fel. Tudomásul veszem, hogy szakdolgozatomat / diplomamunkámat a Szegedi Tudományegyetem Diplomamunka Repozitóriumában tárolja.
 

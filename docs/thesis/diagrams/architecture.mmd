@@ -1,32 +1,36 @@
-flowchart TB
+flowchart LR
     User["👤 Felhasználó<br/>(böngésző)"]
 
     subgraph Vercel ["☁️ Vercel (cloud platform)"]
+        direction LR
+
         subgraph Frontend ["Frontend — React 18 + Vite"]
-            App["App komponens<br/>+ Router"]
-            Pages["Oldalak<br/>(Public, Login, Dashboard,<br/>Centers, Map, Reservations…)"]
-            Components["Komponensek<br/>(Layout, ReservationModal,<br/>StatCard, InteractiveMap…)"]
-            Hooks["Egyéni hookok<br/>(TanStack Query alapon)<br/>useShoppingCenters,<br/>useReservations…"]
-            i18n["i18n + téma<br/>(HU/EN, light/dark)"]
+            direction TB
+            App["App + Router"]
+            Pages["Oldalak<br/>(Public, Login,<br/>Dashboard, Centers,<br/>Map, Reservations…)"]
+            Components["Komponensek<br/>(Layout, Modal,<br/>StatCard,<br/>InteractiveMap…)"]
+            Hooks["Egyéni hookok<br/>(TanStack Query)<br/>useShoppingCenters,<br/>useReservations…"]
+            i18n["i18n + téma<br/>HU/EN, light/dark"]
+            App --> Pages
+            Pages --> Components
+            Pages --> Hooks
         end
 
         subgraph Backend ["Backend — Express + TypeScript"]
-            API["REST API<br/>/api/auth /api/centers<br/>/api/reservations<br/>/api/dashboard /api/areas"]
-            AuthMW["JWT auth middleware<br/>+ Zod validáció"]
+            direction TB
+            API["REST API<br/>/api/auth<br/>/api/centers<br/>/api/reservations<br/>/api/dashboard<br/>/api/areas"]
+            AuthMW["JWT middleware<br/>+ Zod validáció"]
             Sim["IoT szimulátor<br/>(setInterval 30s)"]
+            API --> AuthMW
         end
 
-        DB[("💾 SQLite<br/>better-sqlite3<br/>6 tábla<br/>(users, shopping_centers,<br/>parking_spaces, areas,<br/>reservations,<br/>occupancy_history)")]
+        DB[("💾 SQLite<br/>better-sqlite3<br/>6 tábla")]
     end
 
     User -- "HTTPS" --> App
-    App --> Pages
-    Pages --> Components
-    Pages --> Hooks
     Hooks -- "axios HTTP" --> API
-    API --> AuthMW
     AuthMW --> DB
-    Sim -- "minden 30s<br/>foglaltság-frissítés" --> DB
+    Sim -- "30s tick<br/>foglaltság-frissítés" --> DB
 
     classDef frontendClass fill:#e3f2fd,stroke:#1976d2,stroke-width:1px
     classDef backendClass fill:#fff3e0,stroke:#f57c00,stroke-width:1px
