@@ -110,12 +110,30 @@ describe('Reservations CRUD', () => {
 });
 
 describe('GET /api/dashboard/stats', () => {
-  it('returns aggregate KPIs', async () => {
-    const res = await request(app).get('/api/dashboard/stats');
+  it('returns aggregate KPIs when called by an admin', async () => {
+    const token = await loginAsAdmin();
+    const res = await request(app)
+      .get('/api/dashboard/stats')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('totalCenters');
     expect(res.body).toHaveProperty('totalCapacity');
     expect(res.body).toHaveProperty('averageOccupancy');
     expect(res.body.totalCenters).toBeGreaterThan(0);
+  });
+
+  it('rejects anonymous callers with 401', async () => {
+    const res = await request(app).get('/api/dashboard/stats');
+    expect(res.status).toBe(401);
+  });
+
+  it('rejects visitor role with 403', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'visitor@parkvision.hu', password: 'visitor123' });
+    const res = await request(app)
+      .get('/api/dashboard/stats')
+      .set('Authorization', `Bearer ${login.body.token}`);
+    expect(res.status).toBe(403);
   });
 });

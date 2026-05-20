@@ -1,5 +1,4 @@
-import { Card, CardContent, Typography, Box, alpha } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Card, Typography, Box, alpha } from '@mui/material';
 import { motion } from 'framer-motion';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -13,6 +12,8 @@ interface StatCardProps {
   delta?: number;
   deltaLabel?: string;
   accent?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
+  unit?: string;
+  monoLabel?: string;
 }
 
 const MotionDiv = motion.div;
@@ -21,92 +22,134 @@ export default function StatCard({
   title,
   value,
   icon,
-  color,
   delta,
   deltaLabel,
   accent = 'primary',
+  unit,
+  monoLabel,
 }: StatCardProps) {
-  const theme = useTheme();
-  const accentColor = theme.palette[accent].main;
-  const accentLight = theme.palette[accent].light;
-
   const trendIcon =
     delta === undefined ? null : delta > 0 ? <TrendingUpIcon fontSize="small" /> : delta < 0 ? <TrendingDownIcon fontSize="small" /> : <TrendingFlatIcon fontSize="small" />;
+
   const trendColor =
     delta === undefined ? 'text.secondary' : delta > 0 ? 'success.main' : delta < 0 ? 'error.main' : 'text.secondary';
 
+  const showAccentRule = accent === 'secondary' || accent === 'warning';
+
   return (
-    <MotionDiv whileHover={{ y: -4 }} transition={{ duration: 0.2 }} style={{ height: '100%' }}>
+    <MotionDiv whileHover={{ y: -2 }} transition={{ duration: 0.22 }} style={{ height: '100%' }}>
       <Card
-        sx={{
+        sx={(theme) => ({
           height: '100%',
-          minWidth: 200,
+          minWidth: 0,
           position: 'relative',
           overflow: 'hidden',
-          background: (theme) =>
-            theme.palette.mode === 'dark'
-              ? `linear-gradient(135deg, ${alpha(accentColor, 0.18)} 0%, ${alpha(theme.palette.background.paper, 0.95)} 60%)`
-              : `linear-gradient(135deg, ${alpha(accentColor, 0.08)} 0%, ${alpha('#ffffff', 0.95)} 60%)`,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 4,
-            height: '100%',
-            background: `linear-gradient(180deg, ${accentColor}, ${accentLight})`,
-          },
-        }}
+          p: { xs: 2.5, sm: 3 },
+          backgroundColor: 'background.paper',
+          border: `1px solid ${alpha(theme.palette.text.primary, 0.12)}`,
+          borderRadius: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        })}
       >
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+        {/* Top row: eyebrow + optional icon */}
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5, gap: 1 }}>
+          <Box>
             <Typography
-              variant="overline"
-              sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: '0.06em' }}
+              className="pv-eyebrow"
+              sx={{ display: 'block', color: 'text.secondary' }}
             >
               {title}
             </Typography>
-            {icon && (
-              <Box
+            {monoLabel && (
+              <Typography
+                className="pv-mono"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  bgcolor: alpha(accentColor, 0.12),
-                  color: color || accentColor,
+                  display: 'block',
+                  fontSize: '0.625rem',
+                  color: 'text.disabled',
+                  letterSpacing: '0.08em',
+                  mt: 0.25,
                 }}
               >
-                {icon}
-              </Box>
+                {monoLabel}
+              </Typography>
             )}
           </Box>
+          {icon && (
+            <Box
+              sx={(theme) => ({
+                width: 28,
+                height: 28,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'text.secondary',
+                '& svg': { fontSize: 20 },
+                opacity: theme.palette.mode === 'dark' ? 0.7 : 0.55,
+              })}
+            >
+              {icon}
+            </Box>
+          )}
+        </Box>
+
+        {/* Hero number — editorial size */}
+        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.75, mb: 'auto' }}>
           <Typography
-            variant="h3"
-            component="div"
-            sx={{ color: color || 'text.primary', fontWeight: 700, lineHeight: 1.1 }}
+            className="pv-mono"
+            sx={{
+              fontSize: { xs: '2.5rem', sm: '3rem' },
+              fontWeight: 600,
+              lineHeight: 1,
+              letterSpacing: '-0.025em',
+              color: 'text.primary',
+            }}
           >
             {value}
           </Typography>
-          {(delta !== undefined || deltaLabel) && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1.5, gap: 0.75, color: trendColor }}>
-              {trendIcon}
-              {delta !== undefined && (
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {delta > 0 ? '+' : ''}
-                  {delta}%
-                </Typography>
-              )}
-              {deltaLabel && (
-                <Typography variant="caption" color="text.secondary">
-                  {deltaLabel}
-                </Typography>
-              )}
-            </Box>
+          {unit && (
+            <Typography
+              className="pv-mono"
+              sx={{
+                fontSize: '0.875rem',
+                color: 'text.secondary',
+                fontWeight: 500,
+              }}
+            >
+              {unit}
+            </Typography>
           )}
-        </CardContent>
+        </Box>
+
+        {/* Optional accent rule for the second/warning KPIs */}
+        {showAccentRule && (
+          <Box
+            sx={{
+              mt: 2,
+              width: 32,
+              height: 2,
+              bgcolor: 'secondary.main',
+            }}
+          />
+        )}
+
+        {/* Trend / delta */}
+        {(delta !== undefined || deltaLabel) && (
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, pt: 1.5, borderTop: '1px solid', borderColor: 'divider', gap: 0.75, color: trendColor }}>
+            {trendIcon}
+            {delta !== undefined && (
+              <Typography className="pv-mono" sx={{ fontWeight: 600, fontSize: '0.8125rem' }}>
+                {delta > 0 ? '+' : ''}{delta}%
+              </Typography>
+            )}
+            {deltaLabel && (
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                {deltaLabel}
+              </Typography>
+            )}
+          </Box>
+        )}
       </Card>
     </MotionDiv>
   );

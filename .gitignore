@@ -62,3 +62,8 @@ public/workbox-*.js
 public/sw.js.map
 public/workbox-*.js.map
 .vercel
+
+# SQLite WAL/SHM sidecars (regenerated at runtime; only parkvision.db is tracked)
+server/data/*.db-shm
+server/data/*.db-wal
+server/data/*.db-journal

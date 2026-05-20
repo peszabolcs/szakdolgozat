@@ -1,4 +1,5 @@
 import { getDb } from '../db/client';
+import { occupancyBus, OccupancyUpdate } from '../realtime/eventBus';
 
 const TICK_MS = Number(process.env.IOT_TICK_MS || 30_000);
 let timer: NodeJS.Timeout | null = null;
@@ -15,11 +16,22 @@ function tick(): void {
     'INSERT INTO occupancy_history (center_id, occupied, capacity, recorded_at) VALUES (?, ?, ?, ?)'
   );
   const now = new Date().toISOString();
+  const snapshot: OccupancyUpdate[] = [];
   for (const c of centers) {
     const delta = Math.floor((Math.random() - 0.5) * 12);
     const next = Math.max(0, Math.min(c.capacity, c.occupied + delta));
     update.run(next, now, c.id);
     recordHistory.run(c.id, next, c.capacity, now);
+    snapshot.push({
+      centerId: c.id,
+      occupied: next,
+      capacity: c.capacity,
+      ratio: c.capacity > 0 ? next / c.capacity : 0,
+      recordedAt: now,
+    });
+  }
+  if (snapshot.length > 0) {
+    occupancyBus.emitSnapshot({ centers: snapshot, recordedAt: now });
   }
 }
 

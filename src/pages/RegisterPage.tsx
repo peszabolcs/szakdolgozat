@@ -8,6 +8,7 @@ import {
   InputAdornment,
   IconButton,
   Stack,
+  LinearProgress,
   alpha,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -15,23 +16,40 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/useAuth';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function LoginPage() {
+function scorePassword(pw: string): { score: number; label: string; color: 'error' | 'warning' | 'info' | 'success' } {
+  let score = 0;
+  if (pw.length >= 8) score += 25;
+  if (pw.length >= 12) score += 15;
+  if (/[a-z]/.test(pw)) score += 10;
+  if (/[A-Z]/.test(pw)) score += 15;
+  if (/\d/.test(pw)) score += 15;
+  if (/[^a-zA-Z0-9]/.test(pw)) score += 20;
+  if (score < 30) return { score, label: 'Gyenge', color: 'error' };
+  if (score < 60) return { score, label: 'Közepes', color: 'warning' };
+  if (score < 85) return { score, label: 'Jó', color: 'info' };
+  return { score, label: 'Erős', color: 'success' };
+}
+
+export default function RegisterPage() {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [touched, setTouched] = useState({ email: false, password: false });
+  const [touched, setTouched] = useState({ email: false, name: false, password: false });
   const [error, setError] = useState<string | null>(null);
-  const [errorTitle, setErrorTitle] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const pwScore = useMemo(() => scorePassword(password), [password]);
 
   const emailError = useMemo(() => {
     if (!touched.email) return '';
@@ -40,39 +58,37 @@ export default function LoginPage() {
     return '';
   }, [email, touched.email, t]);
 
+  const nameError = useMemo(() => {
+    if (!touched.name) return '';
+    if (!name.trim()) return 'A név megadása kötelező';
+    return '';
+  }, [name, touched.name]);
+
   const passwordError = useMemo(() => {
     if (!touched.password) return '';
     if (!password) return t('auth.errors.passwordRequired');
-    if (password.length < 6) return t('auth.errors.passwordShort');
+    if (password.length < 8) return 'Legalább 8 karakter';
     return '';
   }, [password, touched.password, t]);
 
-  const canSubmit = EMAIL_REGEX.test(email) && password.length >= 6 && !loading;
+  const canSubmit = EMAIL_REGEX.test(email) && name.trim().length > 0 && password.length >= 8 && !loading;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setTouched({ email: true, password: true });
+    setTouched({ email: true, name: true, password: true });
     if (!canSubmit) return;
     setError(null);
-    setErrorTitle(null);
     setLoading(true);
     try {
-      const result = await login(email, password);
+      const result = await register(email, password, name);
       if (result.ok) {
-        navigate(result.user.role === 'admin' ? '/admin/dashboard' : '/me');
+        // New registrations are always visitor role → land on personal account page.
+        navigate('/me');
       } else {
         setError(result.error.message);
-        setErrorTitle(
-          result.error.code === 'invalid_credentials'
-            ? t('auth.errors.titleInvalid')
-            : result.error.code === 'network'
-              ? t('auth.errors.titleNetwork')
-              : t('auth.errors.titleUnknown')
-        );
       }
     } catch {
-      setError(t('auth.loginError'));
-      setErrorTitle(t('auth.errors.titleUnknown'));
+      setError('Ismeretlen hiba történt');
     } finally {
       setLoading(false);
     }
@@ -87,7 +103,7 @@ export default function LoginPage() {
         bgcolor: 'background.default',
       }}
     >
-      {/* === LEFT: Editorial manifesto panel === */}
+      {/* === LEFT: brand manifesto === */}
       <Box
         sx={(theme) => ({
           display: { xs: 'none', md: 'flex' },
@@ -109,31 +125,18 @@ export default function LoginPage() {
       >
         <Box sx={{ position: 'relative' }}>
           <Stack direction="row" alignItems="baseline" spacing={1.5}>
-            <Typography
-              sx={{
-                fontFamily: '"Fraunces", serif',
-                fontWeight: 500,
-                fontSize: '1.5rem',
-                letterSpacing: '-0.022em',
-              }}
-            >
+            <Typography sx={{ fontFamily: '"Fraunces", serif', fontWeight: 500, fontSize: '1.5rem', letterSpacing: '-0.022em' }}>
               <Box component="span" sx={{ fontStyle: 'italic', fontWeight: 400 }}>Park</Box>Vision
             </Typography>
-            <Box
-              className="pv-mono"
-              sx={{ fontSize: '0.625rem', letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.5 }}
-            >
+            <Box className="pv-mono" sx={{ fontSize: '0.625rem', letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.5 }}>
               · v0.4
             </Box>
           </Stack>
         </Box>
 
         <Box sx={{ position: 'relative', maxWidth: 520 }}>
-          <Typography
-            className="pv-eyebrow"
-            sx={{ display: 'block', mb: 2.5, color: alpha('#F5F1E8', 0.6) }}
-          >
-            № 01 · Bejelentkezés
+          <Typography className="pv-eyebrow" sx={{ display: 'block', mb: 2.5, color: alpha('#F5F1E8', 0.6) }}>
+            № 02 · Új fiók
           </Typography>
 
           <Typography
@@ -146,16 +149,17 @@ export default function LoginPage() {
               mb: 3.5,
             }}
           >
-            „A városban <Box component="span" sx={{ fontStyle: 'italic', color: '#D97706' }}>láthatóvá</Box> tesszük a foglaltságot — utcánként, központonként, percről percre."
+            <Box component="span" sx={{ fontStyle: 'italic', color: '#D97706' }}>Foglalj</Box> egy kattintással. Élő foglaltság. Garantált férőhely.
           </Typography>
 
           <Box sx={{ width: 36, height: 2, bgcolor: '#D97706', mb: 2.5 }} />
 
-          <Typography
-            sx={{ fontSize: '1rem', lineHeight: 1.6, color: alpha('#F5F1E8', 0.7), maxWidth: 460 }}
-          >
-            Az adminisztrátori felület valós idejű foglaltsági adatokat, gépi tanuláson alapuló előrejelzéseket és letölthető riportokat kínál.
-          </Typography>
+          <Stack spacing={1.5} sx={{ fontSize: '0.9375rem', color: alpha('#F5F1E8', 0.8) }}>
+            <FeatureLine label="Valós idejű adatok 30 mp-enként" />
+            <FeatureLine label="Statisztikai foglaltsági előrejelzés" />
+            <FeatureLine label="Foglalás múltbéli idősoros mintázat alapján" />
+            <FeatureLine label="Kétnyelvű felület, sötét és világos téma" />
+          </Stack>
         </Box>
 
         <Stack
@@ -178,7 +182,7 @@ export default function LoginPage() {
         </Stack>
       </Box>
 
-      {/* === RIGHT: Form panel === */}
+      {/* === RIGHT: form === */}
       <Box
         sx={{
           display: 'flex',
@@ -192,7 +196,7 @@ export default function LoginPage() {
       >
         <Box className="pv-reveal pv-reveal-1" sx={{ mb: { xs: 4, md: 5 } }}>
           <Typography className="pv-eyebrow" sx={{ display: 'block', color: 'text.secondary', mb: 1.5 }}>
-            Bejelentkezés
+            Regisztráció
           </Typography>
           <Typography
             sx={{
@@ -205,10 +209,10 @@ export default function LoginPage() {
               mb: 1,
             }}
           >
-            Üdv <Box component="span" sx={{ fontStyle: 'italic' }}>újra</Box>.
+            Csatlakozz <Box component="span" sx={{ fontStyle: 'italic' }}>most</Box>.
           </Typography>
           <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-            Add meg az email címed és jelszavad a folytatáshoz.
+            30 másodperc, és kész a fiókod. Nincs kreditkártya.
           </Typography>
         </Box>
 
@@ -218,19 +222,39 @@ export default function LoginPage() {
             sx={{ mb: 3, borderRadius: 0.5, border: '1px solid', borderColor: 'error.main' }}
             onClose={() => setError(null)}
           >
-            {errorTitle && (
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-                {errorTitle}
-              </Typography>
-            )}
             <Typography variant="body2">{error}</Typography>
           </Alert>
         )}
 
-        <Stack component="form" spacing={3} onSubmit={handleSubmit} noValidate className="pv-reveal pv-reveal-2">
+        <Stack component="form" spacing={2.5} onSubmit={handleSubmit} noValidate className="pv-reveal pv-reveal-2">
           <Box>
             <Typography className="pv-eyebrow" sx={{ display: 'block', color: 'text.secondary', mb: 1 }}>
-              Email cím
+              Név
+            </Typography>
+            <TextField
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => setTouched((s) => ({ ...s, name: true }))}
+              required
+              autoComplete="name"
+              autoFocus
+              error={!!nameError}
+              helperText={nameError || ' '}
+              placeholder="Teljes név"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonOutlinedIcon fontSize="small" color={nameError ? 'error' : 'action'} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+
+          <Box>
+            <Typography className="pv-eyebrow" sx={{ display: 'block', color: 'text.secondary', mb: 1 }}>
+              Email
             </Typography>
             <TextField
               fullWidth
@@ -240,10 +264,9 @@ export default function LoginPage() {
               onBlur={() => setTouched((s) => ({ ...s, email: true }))}
               required
               autoComplete="email"
-              autoFocus
               error={!!emailError}
               helperText={emailError || ' '}
-              placeholder="te@parkvision.hu"
+              placeholder="te@example.com"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -265,9 +288,9 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               onBlur={() => setTouched((s) => ({ ...s, password: true }))}
               required
-              autoComplete="current-password"
+              autoComplete="new-password"
               error={!!passwordError}
-              helperText={passwordError || ' '}
+              helperText={passwordError || 'Legalább 8 karakter'}
               placeholder="••••••••"
               InputProps={{
                 startAdornment: (
@@ -289,6 +312,29 @@ export default function LoginPage() {
                 ),
               }}
             />
+            {password.length > 0 && (
+              <Box sx={{ mt: 1 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={Math.min(pwScore.score, 100)}
+                  color={pwScore.color}
+                  sx={{ height: 4, borderRadius: 0 }}
+                />
+                <Typography
+                  className="pv-mono"
+                  sx={{
+                    mt: 0.5,
+                    fontSize: '0.6875rem',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: `${pwScore.color}.main`,
+                    fontWeight: 700,
+                  }}
+                >
+                  Jelszó erősség · {pwScore.label}
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           <Button
@@ -298,44 +344,35 @@ export default function LoginPage() {
             size="large"
             disabled={!canSubmit}
             endIcon={<ArrowOutwardIcon />}
-            sx={{ py: 1.5, fontSize: '0.9375rem', justifyContent: 'space-between' }}
+            sx={{ py: 1.5, fontSize: '0.9375rem', justifyContent: 'space-between', mt: 1 }}
           >
-            {loading ? 'Bejelentkezés…' : 'Bejelentkezés'}
+            {loading ? 'Regisztráció…' : 'Fiók létrehozása'}
           </Button>
         </Stack>
-
-        {/* Demo credentials — editorial footnote style */}
-        <Box
-          sx={(theme) => ({
-            mt: 4,
-            p: 2,
-            border: `1px dashed ${theme.palette.divider}`,
-            borderRadius: 0.5,
-            backgroundColor: alpha(theme.palette.text.primary, 0.02),
-          })}
-        >
-          <Typography className="pv-eyebrow" sx={{ display: 'block', color: 'text.secondary', mb: 1 }}>
-            Demó belépés
-          </Typography>
-          <Stack spacing={0.5}>
-            <Typography className="pv-mono" sx={{ fontSize: '0.8125rem', color: 'text.primary' }}>
-              admin@parkvision.hu &nbsp;·&nbsp; admin123
-            </Typography>
-            <Typography className="pv-mono" sx={{ fontSize: '0.8125rem', color: 'text.secondary' }}>
-              visitor@parkvision.hu &nbsp;·&nbsp; visitor123
-            </Typography>
-          </Stack>
-        </Box>
 
         <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'space-between' }}>
           <Button size="small" onClick={() => navigate('/')} sx={{ color: 'text.secondary' }}>
             ← Vissza a főoldalra
           </Button>
-          <Button size="small" onClick={() => navigate('/register')} sx={{ color: 'secondary.dark' }}>
-            Regisztráció →
+          <Button size="small" onClick={() => navigate('/login')} sx={{ color: 'secondary.dark' }}>
+            Már van fiókod? Bejelentkezés →
           </Button>
         </Stack>
       </Box>
     </Box>
+  );
+}
+
+function FeatureLine({ label }: { label: string }) {
+  return (
+    <Stack direction="row" spacing={1.5} alignItems="baseline">
+      <Box
+        className="pv-mono"
+        sx={{ color: '#D97706', fontSize: '0.875rem', letterSpacing: '0.08em' }}
+      >
+        ▸
+      </Box>
+      <Typography sx={{ fontSize: '0.9375rem', lineHeight: 1.5 }}>{label}</Typography>
+    </Stack>
   );
 }

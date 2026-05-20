@@ -1,6 +1,17 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'parkvision-dev-secret-change-in-prod';
+const DEV_FALLBACK_SECRET = 'parkvision-dev-secret-change-in-prod';
+
+function resolveJwtSecret(): string {
+  const fromEnv = process.env.JWT_SECRET?.trim();
+  if (fromEnv) return fromEnv;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET env var is required in production');
+  }
+  return DEV_FALLBACK_SECRET;
+}
+
+const JWT_SECRET = resolveJwtSecret();
 const JWT_EXPIRES_IN = '7d';
 
 export interface JwtPayload {

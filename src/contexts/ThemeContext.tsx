@@ -40,6 +40,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     return mode;
   }, [mode, systemPrefersDark]);
 
+  // Mirror the actual theme on the <html> element so design-tokens.css can target [data-theme="dark"].
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', actualTheme);
+    root.style.colorScheme = actualTheme;
+  }, [actualTheme]);
+
   const setMode = (newMode: ThemeMode) => {
     setModeState(newMode);
     localStorage.setItem('themeMode', newMode);

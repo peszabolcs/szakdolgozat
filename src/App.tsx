@@ -12,12 +12,14 @@ import ShoppingCentersPage from './pages/ShoppingCentersPage';
 import MapPage from './pages/MapPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import PublicHomePage from './pages/PublicHomePage';
 import ReservationsPage from './pages/ReservationsPage';
 import ParkingSpacesPage from './pages/ParkingSpacesPage';
 import SettingsPage from './pages/SettingsPage';
 import ParkingDetailPage from './pages/ParkingDetailPage';
 import AreasPage from './pages/AreasPage';
+import AccountPage from './pages/AccountPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { OfflineIndicator } from './components/OfflineIndicator';
@@ -45,12 +47,36 @@ function App() {
             <AuthProvider>
               <BrowserRouter>
                 <Routes>
-                  {/* Public Routes */}
+                  {/* === Public === */}
                   <Route path="/" element={<PublicHomePage />} />
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
 
-                  {/* Admin Routes - Protected */}
-                  <Route path="/admin" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+                  {/* === Visitor (auth required, any role) === */}
+                  <Route
+                    path="/me"
+                    element={
+                      <ProtectedRoute>
+                        <Layout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<AccountPage />} />
+                    <Route path="reservations" element={<ReservationsPage />} />
+                    <Route path="map" element={<MapPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="centers/:id" element={<ParkingDetailPage />} />
+                  </Route>
+
+                  {/* === Admin (admin-only) === */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute requireRole="admin">
+                        <Layout />
+                      </ProtectedRoute>
+                    }
+                  >
                     <Route index element={<Navigate to="/admin/dashboard" replace />} />
                     <Route path="dashboard" element={<DashboardPage />} />
                     <Route path="shopping-centers" element={<ShoppingCentersPage />} />
@@ -62,6 +88,9 @@ function App() {
                     <Route path="admin-panel" element={<AdminPage />} />
                     <Route path="settings" element={<SettingsPage />} />
                   </Route>
+
+                  {/* Fallback */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </BrowserRouter>
               <PWAInstallPrompt />

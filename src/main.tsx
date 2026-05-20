@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import './styles/design-tokens.css';
 
 const USE_MSW = import.meta.env.DEV && import.meta.env.VITE_USE_MSW === 'true';
 

@@ -27,7 +27,11 @@ import {
   PieChart as PieChartIcon,
   BarChart as BarChartIcon,
   Refresh,
+  PictureAsPdf,
 } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { getAuthToken } from '../utils/apiClient';
 import {
   BarChart,
   Bar,
@@ -73,6 +77,35 @@ const AdminPage = () => {
   const { t } = useTranslation();
   const { data: areas, isLoading, refetch } = useAreas();
   const [tabValue, setTabValue] = useState(0);
+  const [downloading, setDownloading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleDownloadReport = async () => {
+    setDownloading(true);
+    try {
+      const token = getAuthToken();
+      const res = await fetch('/api/reports/occupancy.pdf', {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `parkvision-foglaltsag-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      enqueueSnackbar('A riport letöltése elindult', { variant: 'success' });
+    } catch (err) {
+      enqueueSnackbar(`Nem sikerült letölteni a riportot: ${(err as Error).message}`, { variant: 'error' });
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const stats = useMemo(() => {
     if (!areas) return null;
@@ -152,9 +185,21 @@ const AdminPage = () => {
             {t('admin.subtitle', 'Real-time analytics and system overview')}
           </Typography>
         </Box>
-        <IconButton onClick={() => refetch()} color="primary" aria-label="Refresh dashboard data">
-          <Refresh />
-        </IconButton>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<PictureAsPdf />}
+            onClick={handleDownloadReport}
+            disabled={downloading}
+            sx={{ fontWeight: 700 }}
+          >
+            {downloading ? 'Generálás...' : 'PDF riport letöltése'}
+          </Button>
+          <IconButton onClick={() => refetch()} color="primary" aria-label="Refresh dashboard data">
+            <Refresh />
+          </IconButton>
+        </Stack>
       </Stack>
 
       <Grid container spacing={3}>

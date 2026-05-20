@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getDb } from '../db/client';
+import { requireAuth, requireRole } from '../auth/middleware';
 
 const router = Router();
 
@@ -11,6 +12,9 @@ interface SpaceRow {
   updated_at: string;
   center_name: string;
 }
+
+// Per-space inventory is operations data → admin-only.
+router.use(requireAuth, requireRole('admin'));
 
 router.get('/', (_req, res) => {
   const rows = getDb()

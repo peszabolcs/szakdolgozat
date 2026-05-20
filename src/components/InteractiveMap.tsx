@@ -11,12 +11,17 @@ import {
   TextField,
   InputAdornment,
   Paper,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { Navigation, Search, MyLocation, DirectionsCar } from '@mui/icons-material';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import PinDropIcon from '@mui/icons-material/PinDrop';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getOccupancyColor } from '../mocks/data/parkingLocations';
+import { HeatmapLayer } from './HeatmapLayer';
 import type { Area } from '../types';
 
 type TranslateFunction = (key: string, fallback?: string) => string;
@@ -121,6 +126,7 @@ export const InteractiveMap = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
+  const [viewMode, setViewMode] = useState<'markers' | 'heatmap'>('markers');
 
   const handleGetUserLocation = () => {
     if (navigator.geolocation) {
@@ -200,6 +206,22 @@ export const InteractiveMap = ({
                 {t('map.myLocation', 'My Location')}
               </Button>
             )}
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              size="small"
+              onChange={(_, v) => v && setViewMode(v)}
+              aria-label="Map view mode"
+            >
+              <ToggleButton value="markers" aria-label="Markers view">
+                <PinDropIcon sx={{ mr: 0.5 }} fontSize="small" />
+                Markerek
+              </ToggleButton>
+              <ToggleButton value="heatmap" aria-label="Heatmap view">
+                <WhatshotIcon sx={{ mr: 0.5 }} fontSize="small" />
+                Hőtérkép
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Stack>
         </Box>
       )}
@@ -223,7 +245,23 @@ export const InteractiveMap = ({
             />
           )}
 
-          {filteredAreas.map((area) => {
+          {viewMode === 'heatmap' && (
+            <HeatmapLayer
+              points={filteredAreas.flatMap((a) =>
+                a.location
+                  ? [{
+                      lat: a.location.lat,
+                      lng: a.location.lng,
+                      intensity: a.capacity > 0 ? a.occupied / a.capacity : 0,
+                    }]
+                  : []
+              )}
+              radius={70}
+              blur={45}
+            />
+          )}
+
+          {viewMode === 'markers' && filteredAreas.map((area) => {
             if (!area.location) return null;
 
             const occupancyRate = (area.occupied / area.capacity) * 100;

@@ -27,7 +27,7 @@ export const shoppingCenters: ShoppingCenter[] = [
     occupied: 890,
     openingHours: '08:00 - 21:00',
     description: 'Modern shopping mall with extensive parking facilities',
-    imageUrl: '/images/arena.jpg',
+    imageUrl: '/images/arena.webp',
   },
   {
     id: 'sc-3',
@@ -41,7 +41,7 @@ export const shoppingCenters: ShoppingCenter[] = [
     occupied: 425,
     openingHours: '09:00 - 21:00',
     description: 'Popular shopping destination in Buda side',
-    imageUrl: '/images/allee.jpg',
+    imageUrl: '/images/allee.webp',
   },
   {
     id: 'sc-4',
@@ -97,6 +97,6 @@ export const shoppingCenters: ShoppingCenter[] = [
     occupied: 350,
     openingHours: '08:00 - 21:00',
     description: 'Compact shopping center with easy parking access',
-    imageUrl: '/images/shopmark.jpg',
+    imageUrl: '/images/shopmark.webp',
   },
 ];

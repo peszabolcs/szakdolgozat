@@ -71,3 +71,32 @@ describe('GET /api/auth/me', () => {
     expect(res.status).toBe(401);
   });
 });
+
+describe('POST /api/auth/register', () => {
+  it('creates a new visitor account and returns a token', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'new.user@example.com', password: 'supersecret', name: 'New User' });
+    expect(res.status).toBe(201);
+    expect(res.body.token).toBeTruthy();
+    expect(res.body.user).toMatchObject({ email: 'new.user@example.com', role: 'visitor', name: 'New User' });
+  });
+
+  it('rejects duplicate emails with 409', async () => {
+    await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'dup@example.com', password: 'supersecret', name: 'Dup' });
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'dup@example.com', password: 'supersecret', name: 'Dup2' });
+    expect(res.status).toBe(409);
+    expect(res.body.code).toBe('email_taken');
+  });
+
+  it('rejects short passwords with 400', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'shortpw@example.com', password: 'short', name: 'X' });
+    expect(res.status).toBe(400);
+  });
+});

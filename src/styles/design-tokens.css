@@ -1,0 +1,294 @@
+/* =============================================================
+ * ParkVision — Civic Data Editorial Design System
+ * =============================================================
+ *
+ * Aesthetic direction: urban planning documents meet editorial
+ * data journalism. Fraunces (display serif), Bricolage Grotesque
+ * (UI grotesque), JetBrains Mono (data). Moss-ink primary,
+ * burnt saffron accent, warm linen surfaces.
+ * ============================================================= */
+
+:root {
+  /* --- Typography ------------------------------------------------ */
+  --pv-font-display: 'Fraunces', 'Times New Roman', serif;
+  --pv-font-sans: 'Bricolage Grotesque', system-ui, sans-serif;
+  --pv-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* --- Brand palette ------------------------------------------- */
+  --pv-ink: #0f1b17;
+  --pv-ink-soft: #1a2520;
+  --pv-moss: #2d4a3e;
+  --pv-moss-light: #5b7a6e;
+  --pv-sage: #8aaf9c;
+  --pv-bone: #f5f1e8;
+  --pv-paper: #fbf8f1;
+  --pv-paper-warm: #f0ead9;
+  --pv-iron: #525b5a;
+  --pv-iron-light: #8c8f8d;
+
+  /* The single accent: burnt saffron / civic signage orange */
+  --pv-saffron: #d97706;
+  --pv-saffron-deep: #b45309;
+  --pv-saffron-soft: #f5d199;
+
+  /* Semantic */
+  --pv-success: #65a30d;
+  --pv-warning: #d97706;
+  --pv-danger: #c2410c;
+
+  /* Status bands (occupancy) — desaturated for data viz dignity */
+  --pv-band-free: #4d7c0f;
+  --pv-band-busy: #b45309;
+  --pv-band-full: #991b1b;
+
+  /* --- Light surfaces (default) -------------------------------- */
+  --pv-bg: var(--pv-bone);
+  --pv-bg-soft: var(--pv-paper);
+  --pv-bg-warm: var(--pv-paper-warm);
+  --pv-surface: var(--pv-paper);
+  --pv-surface-raised: #ffffff;
+  --pv-text: var(--pv-ink);
+  --pv-text-muted: var(--pv-iron);
+  --pv-text-soft: var(--pv-iron-light);
+  --pv-border: rgba(15, 27, 23, 0.12);
+  --pv-border-strong: rgba(15, 27, 23, 0.24);
+  --pv-rule: rgba(15, 27, 23, 0.08);
+
+  /* --- Geometry ------------------------------------------------ */
+  --pv-radius-xs: 2px;
+  --pv-radius-sm: 4px;
+  --pv-radius-md: 8px;
+  --pv-radius-lg: 14px;
+  --pv-radius-pill: 999px;
+
+  /* Border weights — civic signage uses heavier rules */
+  --pv-rule-thin: 1px;
+  --pv-rule-mid: 2px;
+  --pv-rule-bold: 4px;
+
+  /* --- Shadows — editorial, not soft-glow -------------------- */
+  --pv-shadow-sm: 0 1px 0 rgba(15, 27, 23, 0.06), 0 1px 2px rgba(15, 27, 23, 0.05);
+  --pv-shadow-md: 0 2px 0 rgba(15, 27, 23, 0.04), 0 6px 14px -6px rgba(15, 27, 23, 0.15);
+  --pv-shadow-lg: 0 12px 30px -10px rgba(15, 27, 23, 0.25);
+
+  /* --- Motion ------------------------------------------------- */
+  --pv-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --pv-dur-fast: 140ms;
+  --pv-dur: 260ms;
+  --pv-dur-slow: 480ms;
+}
+
+[data-theme='dark'] {
+  --pv-bg: #0a0e0c;
+  --pv-bg-soft: #11161394;
+  --pv-bg-warm: #1a201d;
+  --pv-surface: #161b18;
+  --pv-surface-raised: #1d231f;
+  --pv-text: #e8e4d8;
+  --pv-text-muted: #a8aca6;
+  --pv-text-soft: #6b6f6a;
+  --pv-border: rgba(232, 228, 216, 0.12);
+  --pv-border-strong: rgba(232, 228, 216, 0.24);
+  --pv-rule: rgba(232, 228, 216, 0.08);
+
+  --pv-paper: #1d231f;
+  --pv-paper-warm: #232a25;
+
+  --pv-shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.35);
+  --pv-shadow-md: 0 2px 0 rgba(0, 0, 0, 0.35), 0 8px 20px -6px rgba(0, 0, 0, 0.45);
+  --pv-shadow-lg: 0 18px 40px -10px rgba(0, 0, 0, 0.65);
+}
+
+/* =============================================================
+ * Global resets and editorial baseline
+ * ============================================================= */
+
+html,
+body {
+  background: var(--pv-bg);
+  color: var(--pv-text);
+  font-family: var(--pv-font-sans);
+  font-feature-settings: 'ss01', 'cv01', 'cv02', 'cv11';
+  font-variation-settings: 'opsz' 14;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Subtle paper-grain texture in light mode */
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(15, 27, 23, 0.02) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+[data-theme='dark'] body {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(232, 228, 216, 0.025) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+/* Editorial display headings */
+.pv-display {
+  font-family: var(--pv-font-display);
+  font-weight: 400;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 0;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+.pv-display-italic {
+  font-family: var(--pv-font-display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+/* Tabular monospace numbers — for KPIs and data tables */
+.pv-mono,
+.pv-num {
+  font-family: var(--pv-font-mono);
+  font-feature-settings: 'tnum' 1, 'zero' 1, 'ss01' 1;
+  font-variant-numeric: tabular-nums slashed-zero;
+  letter-spacing: -0.01em;
+}
+
+/* The eyebrow — small all-caps signage labels */
+.pv-eyebrow {
+  font-family: var(--pv-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pv-text-muted);
+  font-weight: 500;
+}
+
+/* Saffron rule — editorial divider */
+.pv-rule-saffron {
+  border: 0;
+  border-top: var(--pv-rule-mid) solid var(--pv-saffron);
+  width: 48px;
+  margin: 0;
+}
+
+/* Marquee ticker */
+@keyframes pv-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.pv-marquee-track {
+  display: inline-flex;
+  gap: 3rem;
+  animation: pv-marquee 60s linear infinite;
+  will-change: transform;
+}
+.pv-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Reveal animations (staggered) */
+@keyframes pv-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pv-reveal {
+  opacity: 0;
+  animation: pv-reveal var(--pv-dur-slow) var(--pv-ease-out) forwards;
+}
+.pv-reveal-1 { animation-delay: 80ms; }
+.pv-reveal-2 { animation-delay: 160ms; }
+.pv-reveal-3 { animation-delay: 240ms; }
+.pv-reveal-4 { animation-delay: 320ms; }
+.pv-reveal-5 { animation-delay: 400ms; }
+.pv-reveal-6 { animation-delay: 480ms; }
+
+/* Live pulse — for ÉLŐ indicator dots */
+@keyframes pv-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.pv-pulse {
+  animation: pv-pulse 1.6s var(--pv-ease) infinite;
+}
+
+/* Scrolling marquee */
+@keyframes pv-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Editorial card — used across app */
+.pv-card {
+  background: var(--pv-surface);
+  border: var(--pv-rule-thin) solid var(--pv-border);
+  border-radius: var(--pv-radius-md);
+  box-shadow: var(--pv-shadow-sm);
+  transition: box-shadow var(--pv-dur) var(--pv-ease),
+              transform var(--pv-dur) var(--pv-ease),
+              border-color var(--pv-dur) var(--pv-ease);
+}
+.pv-card:hover {
+  box-shadow: var(--pv-shadow-md);
+  border-color: var(--pv-border-strong);
+}
+
+/* Civic signage button */
+.pv-btn-civic {
+  font-family: var(--pv-font-sans);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  background: var(--pv-ink);
+  color: var(--pv-bone);
+  border: var(--pv-rule-mid) solid var(--pv-ink);
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  transition: all var(--pv-dur) var(--pv-ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pv-btn-civic:hover {
+  background: var(--pv-saffron);
+  border-color: var(--pv-saffron);
+  color: var(--pv-ink);
+}
+
+/* Focus rings */
+*:focus-visible {
+  outline: 2px solid var(--pv-saffron);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--pv-saffron);
+  color: var(--pv-ink);
+}
+
+/* Scrollbar — subtle, themed */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--pv-border-strong);
+  border-radius: var(--pv-radius-pill);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pv-iron);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* Honor reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

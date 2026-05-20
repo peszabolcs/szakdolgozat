@@ -9,7 +9,7 @@ export interface AuthUser {
 }
 
 export interface AuthError {
-  code: 'invalid_credentials' | 'network' | 'unknown';
+  code: 'invalid_credentials' | 'email_taken' | 'invalid_payload' | 'rate_limited' | 'network' | 'unknown';
   message: string;
 }
 
@@ -17,7 +17,8 @@ interface AuthContextValue {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isHydrating: boolean;
-  login: (email: string, password: string) => Promise<{ ok: true } | { ok: false; error: AuthError }>;
+  login: (email: string, password: string) => Promise<{ ok: true; user: AuthUser } | { ok: false; error: AuthError }>;
+  register: (email: string, password: string, name: string) => Promise<{ ok: true; user: AuthUser } | { ok: false; error: AuthError }>;
   logout: () => void;
 }
 
@@ -71,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       setAuthToken(res.data.token);
       setUser(res.data.user);
-      return { ok: true } as const;
+      return { ok: true as const, user: res.data.user };
     } catch (err) {
       const error = err as { response?: { status?: number; data?: { message?: string } }; message?: string; code?: string };
       if (error.response?.status === 401) {
@@ -93,6 +94,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const register = useCallback(async (email: string, password: string, name: string) => {
+    try {
+      const res = await apiClient.post<{ token: string; user: AuthUser }>('/api/auth/register', {
+        email,
+        password,
+        name,
+      });
+      setAuthToken(res.data.token);
+      setUser(res.data.user);
+      return { ok: true as const, user: res.data.user };
+    } catch (err) {
+      const error = err as { response?: { status?: number; data?: { message?: string; code?: string } } };
+      const data = error.response?.data;
+      if (error.response?.status === 409) {
+        return { ok: false as const, error: { code: 'email_taken' as const, message: data?.message ?? 'Ez az email cím már foglalt.' } };
+      }
+      if (error.response?.status === 400) {
+        return { ok: false as const, error: { code: 'invalid_payload' as const, message: data?.message ?? 'Érvénytelen adat.' } };
+      }
+      if (error.response?.status === 429) {
+        return { ok: false as const, error: { code: 'rate_limited' as const, message: data?.message ?? 'Túl sok kísérlet.' } };
+      }
+      if (!error.response) {
+        return { ok: false as const, error: { code: 'network' as const, message: 'Nem érhető el a szerver.' } };
+      }
+      return { ok: false as const, error: { code: 'unknown' as const, message: data?.message ?? 'Ismeretlen regisztrációs hiba' } };
+    }
+  }, []);
+
   const logout = useCallback(() => {
     setAuthToken(null);
     setUser(null);
@@ -104,9 +134,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       isAuthenticated: !!user,
       isHydrating,
       login,
+      register,
       logout,
     }),
-    [user, isHydrating, login, logout]
+    [user, isHydrating, login, register, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { getDb } from '../db/client';
+import { requireAuth, requireRole } from '../auth/middleware';
 
 const router = Router();
+
+router.use(requireAuth, requireRole('admin'));
 
 router.get('/stats', (_req, res) => {
   const db = getDb();

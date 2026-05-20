@@ -22,6 +22,7 @@ import { useShoppingCenter, useShoppingCenterHistory } from '../hooks/useShoppin
 import { useShoppingCenters } from '../hooks/useShoppingCenters';
 import ReservationModal from '../components/ReservationModal';
 import ErrorBanner from '../components/ErrorBanner';
+import { ForecastChart } from '../components/ForecastChart';
 import { CardGridSkeleton } from '../components/skeletons';
 
 export default function ParkingDetailPage() {
@@ -277,6 +278,12 @@ export default function ParkingDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      {id && (
+        <Box sx={{ mb: 3 }}>
+          <ForecastChart centerId={id} hoursAhead={24} />
+        </Box>
+      )}
 
       {allCenters.data && (
         <ReservationModal
