@@ -20,7 +20,7 @@ import PinDropIcon from '@mui/icons-material/PinDrop';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getOccupancyColor } from '../mocks/data/parkingLocations';
+import { getOccupancyColor } from '../utils/occupancy';
 import { HeatmapLayer } from './HeatmapLayer';
 import type { Area } from '../types';
 

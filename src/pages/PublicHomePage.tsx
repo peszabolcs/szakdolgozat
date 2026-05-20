@@ -28,7 +28,8 @@ import { useAuth } from '../contexts/useAuth';
 import { ShoppingCenterCard } from '../components/ShoppingCenterCard';
 import { InteractiveMap } from '../components/InteractiveMap';
 import ReservationModal from '../components/ReservationModal';
-import { shoppingCenters } from '../mocks/data/shoppingCenters';
+import { useShoppingCenters } from '../hooks/useShoppingCenters';
+import { useOccupancyStream } from '../hooks/useOccupancyStream';
 import { shoppingCentersToAreas } from '../utils/dataAdapters';
 import type { ShoppingCenter } from '../types';
 
@@ -68,6 +69,10 @@ export default function PublicHomePage() {
     setReservationOpen(true);
   };
 
+  // Live data from backend (auto-refreshes via SSE stream)
+  const { data: shoppingCenters = [] } = useShoppingCenters();
+  useOccupancyStream(true);
+
   // Live numbers for hero stats strip
   const stats = useMemo(() => {
     const totalCenters = shoppingCenters.length;
@@ -76,7 +81,7 @@ export default function PublicHomePage() {
     const totalFree = totalCapacity - totalOccupied;
     const fillRate = totalCapacity > 0 ? Math.round((totalOccupied / totalCapacity) * 100) : 0;
     return { totalCenters, totalCapacity, totalOccupied, totalFree, fillRate };
-  }, []);
+  }, [shoppingCenters]);
 
   const now = new Date();
   const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;

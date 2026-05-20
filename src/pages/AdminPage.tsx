@@ -48,7 +48,7 @@ import {
   AreaChart,
 } from 'recharts';
 import { useAreas } from '../hooks/useAreas';
-import { generateOccupancyHistory } from '../mocks/data/parkingLocations';
+import { generateOccupancyHistory } from '../utils/occupancy';
 
 interface TabPanelProps {
   children?: React.ReactNode;
