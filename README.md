@@ -330,31 +330,6 @@ Frontend kulcs tesztek:
 └── vercel.json                Vercel deploy konfig
 ```
 
----
-
-## Verzió + roadmap
-
-**Verzió:** 0.4.0 — *Sprint 02 / M1 push (2026‑04‑26)*
-
-### Sprint 02 (befejezve)
-- ✅ Frontend MVP polish (gradient hero, skeletons, toasts, mobile hamburger)
-- ✅ Foglalási flow (US‑06)
-- ✅ **Valós backend** (Express + SQLite + JWT)
-- ✅ **IoT szimuláció** (`setInterval` 30s + audit history)
-- ✅ **Vercel serverless deploy** + **Docker compose**
-- ✅ 5 új képernyő (S04–S08 placeholder pótlása)
-- ✅ Auth: bcrypt + JWT + axios interceptor + 401 auto‑logout
-- ✅ Mobile responsive + a11y polish
-- ✅ 5 GitHub Actions workflow
-- ✅ 54 teszt (40 frontend + 14 backend)
-
-### Sprint 03 (tervezett — 2026‑05‑03 → 2026‑05‑23)
-- 🟡 Vercel Postgres / Turso integráció (perzisztens prod DB)
-- 🟡 OAuth2 / OIDC valódi identitásszolgáltatóval
-- 🟡 E2E tesztek Playwright‑tel
-- 🟡 Lighthouse CI mobile + desktop
-- 🟡 Refresh token + HttpOnly cookie auth
-- 🟡 Push notifications (Web Push API)
 
 ---
 
@@ -365,4 +340,4 @@ MIT
 ---
 
 **Verzió:** 0.4.0
-**Utoljára frissítve:** 2026‑04‑26 (M1 push)
+**Utoljára frissítve:** 2026‑05-23
